@@ -1,0 +1,14 @@
+# Entorno virtual
+myEnv/
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Variables de entorno (donde suelen ir contraseñas)
+.env
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
