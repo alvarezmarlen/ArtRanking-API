@@ -2,11 +2,17 @@ from flask import Flask
 from config import DevelopmentConfig
 from app.extensiones.db import init_db
 from mongoengine.connection import get_db
+from app.routes.auth_rutas import auth_bp
+from app.routes.usuario_rutas import usuario_bp
+
 
 def create_app(config_class=DevelopmentConfig):
    app = Flask(__name__)
    app.config.from_object(config_class)
 
+   app.register_blueprint(auth_bp, url_prefix="/auth")
+   app.register_blueprint(usuario_bp, url_prefix="/users")
+   
    # Inicializar DB
    init_db(app)
 
