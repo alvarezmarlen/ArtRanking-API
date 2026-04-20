@@ -1,23 +1,23 @@
 from flask import Flask
-from app.extensiones.db import db
-import os
-from dotenv import load_dotenv
+from config import DevelopmentConfig
+from app.extensiones.db import init_db
+from mongoengine.connection import get_db
 
-load_dotenv()
+def create_app(config_class=DevelopmentConfig):
+   app = Flask(__name__)
+   app.config.from_object(config_class)
 
-def create_app():
-    app = Flask(__name__)
+   # Inicializar DB
+   init_db(app)
+
+   @app.route("/")
+   def home():
+       return {"message": "ArtRanking API running"}
     
-    # Configuración
-    app.config['MONGODB_SETTINGS'] = {
-        'host': os.getenv('MONGO_URI')
-    }
-    
-    # Inicializar extensiones
-    db.init_app(app)
-    
-    @app.route('/')
-    def index():
-        return "SERVIDOR FUNCIONANDO"
-        
-    return app
+   @app.route("/test-db")
+   def test_db():
+      db = get_db()
+      collections = db.list_collection_names()
+      return {"collections": collections}
+
+   return app
