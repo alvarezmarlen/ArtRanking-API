@@ -6,6 +6,7 @@ from app.routes.auth_rutas import auth_bp
 from app.routes.usuario_rutas import usuario_bp
 from app.routes.concurso_rutas import concurso_bp
 from app.routes.envio_rutas import envio_bp
+from flask import render_template
 
 
 def create_app(config_class=DevelopmentConfig):
@@ -22,7 +23,8 @@ def create_app(config_class=DevelopmentConfig):
 
    @app.route("/")
    def home():
-       return {"message": "ArtRanking API running"}
+# Como base.html está dentro de la carpeta 'layouts'
+    return render_template("index.html")
     
    @app.route("/test-db")
    def test_db():

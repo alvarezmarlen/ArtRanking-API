@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Inicio - ArtRanking{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <h1>Bienvenido a ArtRanking 🎨</h1>
+        <p>La plataforma donde el talento artístico se encuentra con el reconocimiento.</p>
+        <div class="actions">
+            <a href="/concursos" class="btn-primary">Explorar Concursos</a>
+            <a href="/registro" class="btn-secondary">Unirse como Artista</a>
+        </div>
+    </section>
+
+    <section class="info">
+        <h2>¿Cómo funciona?</h2>
+        <ul>
+            <li>Explora concursos activos 🔍</li>
+            <li>Sube tus mejores obras 📤</li>
+            <li>¡Vota por tus favoritos! ⭐</li>
+        </ul>
+    </section>
+{% endblock %}

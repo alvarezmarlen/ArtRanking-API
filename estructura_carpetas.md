@@ -8,7 +8,7 @@ artranking-api/
 │   ├── extensiones/
 │   │   ├── __init__.py
 │   │   ├── db.py          # instancia de mongodb engine
-│   │   ├── migrate.py     # Flask-Migrate
+│   │   
 │   │
 │   ├── models/            # AQUÍ VAN TUS ENTIDADES
 │   │   ├── __init__.py
@@ -40,14 +40,42 @@ artranking-api/
 │   │   ├── usuario_esquema.py
 │   │   ├── envio_esquema.py
 │   │   └── voto_esquema.py
+|   
+│   ├── static/               # Archivos públicos del navegador
+│   │   ├── css/
+│   │   │   └── style.css     # Diseño y reglas SEO
+│   │   ├── js/
+│   │   │   └── main.js       # Interactividad y validación cliente
+│   │   └── img/              # Imágenes y logos del sistema
 │
+|   
+│   ├── templates/            # Motor de plantillas Jinja2
+│   │   ├── layouts/
+│   │   │   └── base.html     # Estructura maestra
+│   │   ├── macros/
+│   │   │   └── componentes.html
+│   │   ├── errores/
+│   │   │   └── 404.html
+│   │   ├── auth/
+│   │   │   ├── login.html
+│   │   │   └── registro.html
+│   │   ├── concursos/
+│   │   │   ├── lista.html
+│   │   │   └── detalle.html
+│   │   ├── envios/
+│   │   │   ├── subir_obra.html
+│   │   │   └── galeria.html
+│   │   └── perfil/
+│   │       └── ver_perfil.html
+|
 │   ├── utils/
 │   │   ├── jwt_utils.py
 │   │   └── decoradores.py
 │
-├── migrations/            # generado por Flask-Migrate
 │
-├── run.py
+├── myEnv
+├──.env
+├── config.py
 ├── requirements.txt
-└── .env
+└── run.py
 ```
