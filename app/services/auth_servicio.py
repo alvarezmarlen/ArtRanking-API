@@ -3,6 +3,11 @@ from app.utils.jwt_utils import generar_token
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def registrar_usuario(data):
+    # Verificar si el email ya existe
+    usuario_existente = Usuario.objects(email=data["email"]).first()
+    if usuario_existente:
+        return None, "El email ya está registrado"
+
     password_hash = generate_password_hash(data["password"])
 
     user = Usuario(
@@ -10,7 +15,7 @@ def registrar_usuario(data):
         password=password_hash
     ).save()
 
-    return user
+    return user, None
 
 
 def login_usuario(data):
