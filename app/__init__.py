@@ -8,6 +8,7 @@ from app.routes.concurso_rutas import concurso_bp
 from app.routes.envio_rutas import envio_bp
 from flask import render_template
 
+from app.routes.voto_rutas import voto_bp
 
 def create_app(config_class=DevelopmentConfig):
    app = Flask(__name__)
@@ -18,6 +19,8 @@ def create_app(config_class=DevelopmentConfig):
    app.register_blueprint(concurso_bp, url_prefix="/concursos")
    app.register_blueprint(envio_bp, url_prefix="/envios")
    
+   app.register_blueprint(voto_bp, url_prefix="/votos")
+
    # Inicializar DB
    init_db(app)
 
