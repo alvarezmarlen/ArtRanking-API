@@ -133,21 +133,21 @@ def cambiar_estado(concurso_id):
 @concurso_bp.route("/<concurso_id>/categorias", methods=["POST"])  # POST /concursos/<id>/categorias
 @jwt_requerido
 def agregar_cat(concurso_id):
-    """Agregar categoría a un concurso (requiere JWT)."""
-    from app.schemas.envio_esquema import CategoriaSchema
+    """Vincular categoría existente a un concurso (requiere JWT)."""
+    categoria_id = request.json.get("categoria_id")
 
-    schema = CategoriaSchema()
-    data = schema.load(request.json)
+    if not categoria_id:
+        return jsonify({"error": "categoria_id requerido"}), 400
 
-    categoria = agregar_categoria(concurso_id, data)
+    categoria = agregar_categoria(concurso_id, categoria_id)
 
     if not categoria:
-        return jsonify({"error": "Concurso no encontrado"}), 404
+        return jsonify({"error": "Concurso o Categoría no encontrados"}), 404
 
     return jsonify({
         "id": str(categoria.id),
         "nombre": categoria.nombre,
-        "mensaje": "Categoría agregada"
+        "mensaje": "Categoría vinculada al concurso"
     }), 201
 
 

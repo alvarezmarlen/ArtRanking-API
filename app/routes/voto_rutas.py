@@ -1,18 +1,23 @@
 from flask import Blueprint, request, jsonify
 from app.services.voto_servicio import votar
+from app.utils.decoradores import jwt_requerido
 
 voto_bp = Blueprint("votos", __name__)
 
 
 # votos
 @voto_bp.route("/", methods=["POST"])
+@jwt_requerido
 def crear_voto():
-    data = request.json
+    """Crear nuevo voto a concurso (requiere JWT)."""
+    from app.schemas.voto_esquema import VotoSchema
+    schema = VotoSchema()
+    data = schema.load(request.json)
 
-    voto = votar(data["user_id"], data["submission_id"])
+    voto, error = votar(data, request.user["user_id"])
 
-    if not voto:
-        return jsonify({"error": "Ya votaste"}), 400
+    if error:
+        return jsonify({"error": error}), 400
 
     return jsonify({"message": "Voto registrado"})
 

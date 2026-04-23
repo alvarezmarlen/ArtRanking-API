@@ -22,9 +22,9 @@ Concursos
 
 
 Categorías
- Relación: 1 Concurso → N Categorías
+ Colección independiente (catálogo maestro)
  nombre
- contest_id
+ descripcion
 
 Envíos
  Relación: Usuario + Concurso + Categoría

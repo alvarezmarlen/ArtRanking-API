@@ -10,7 +10,8 @@ def dashboard():
 @admin_bp.route("/concursos")
 def concursos():
     """Gestión de concursos (Placeholder)."""
-    return render_template("admin/dashboard.html")
+
+    return render_template("admin/concurso.html")
 
 @admin_bp.route("/envios")
 def envios():

@@ -50,23 +50,29 @@ artranking-api/
 │
 |   
 │   ├── templates/            # Motor de plantillas Jinja2
+│   │   ├── common/           # Elementos compartidos
+│   │   │   ├── macros/
+│   │   │   │   └── componentes.html
+│   │   │   └── errores/
+│   │   │       └── 404.html
 │   │   ├── layouts/
-│   │   │   └── base.html     # Estructura maestra
-│   │   ├── macros/
-│   │   │   └── componentes.html
-│   │   ├── errores/
-│   │   │   └── 404.html
-│   │   ├── auth/
-│   │   │   ├── login.html
-│   │   │   └── registro.html
-│   │   ├── concursos/
-│   │   │   ├── lista.html
-│   │   │   └── detalle.html
-│   │   ├── envios/
-│   │   │   ├── subir_obra.html
-│   │   │   └── galeria.html
-│   │   └── perfil/
-│   │       └── ver_perfil.html
+│   │   │   ├── base_admin.html # Layout para administración
+│   │   │   └── base_user.html  # Layout para usuarios normales
+│   │   ├── admin/            # Vistas administrativas
+│   │   │   └── dashboard.html
+│   │   └── user/             # Vistas para usuario final (cliente)
+│   │       ├── index.html
+│   │       ├── auth/
+│   │       │   ├── login.html
+│   │       │   └── registro.html
+│   │       ├── concursos/
+│   │       │   ├── lista.html
+│   │       │   └── detalle.html
+│   │       ├── envios/
+│   │       │   ├── subir_obra.html
+│   │       │   └── galeria.html
+│   │       └── perfil/
+│   │           └── ver_perfil.html
 |
 │   ├── utils/
 │   │   ├── jwt_utils.py
