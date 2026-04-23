@@ -7,6 +7,7 @@ from app.routes.usuario_rutas import usuario_bp
 from app.routes.concurso_rutas import concurso_bp
 from app.routes.envio_rutas import envio_bp
 from app.routes.voto_rutas import voto_bp
+from app.routes.categoria_rutas import categoria_bp
 from flask import render_template
 
 from app.routes.admin_rutas import admin_bp
@@ -21,6 +22,7 @@ def create_app(config_class=DevelopmentConfig):
    app.register_blueprint(envio_bp, url_prefix="/envios")
    app.register_blueprint(voto_bp, url_prefix="/votos")
    app.register_blueprint(admin_bp, url_prefix="/admin")
+   app.register_blueprint(categoria_bp, url_prefix="/categorias")
 
    # Inicializar DB
    init_db(app)
@@ -28,7 +30,7 @@ def create_app(config_class=DevelopmentConfig):
    @app.route("/")
    def home():
 # Como base.html está dentro de la carpeta 'layouts'
-    return render_template("index.html")
+    return render_template("user/index.html")
     
    @app.route("/test-db")
    def test_db():

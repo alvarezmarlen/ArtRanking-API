@@ -63,58 +63,112 @@ Click derecho en la colección → **Add Folder** → Nombre: `Auth`
 
 ---
 
-## 3. Crear Carpeta "Concursos"
+## 3. Crear Carpeta "Categorías" (Catálogo Maestro)
+
+### Request 1: Crear Categoría
+- Nombre: `Crear Categoría`
+- Method: `POST`
+- URL: `http://localhost:5000/categorias`
+- Headers: 
+  - `Content-Type`: `application/json`
+  - `Authorization`: `Bearer {token}`
+- Body:
+```json
+{
+  "nombre": "Pintura al Óleo",
+  "descripcion": "Obras realizadas con técnica de óleo"
+}
+```
+- ✅ Copiar el `id` de la categoría.
+
+### Request 2: Listar Categorías
+- Nombre: `Listar Categorías`
+- Method: `GET`
+- URL: `http://localhost:5000/categorias`
+
+---
+
+## 4. Crear Carpeta "Concursos"
 
 ### Request 1: Crear Concurso
-
 - Nombre: `Crear Concurso`
 - Method: `POST`
 - URL: `http://localhost:5000/concursos`
 - Tab **Headers**:
   - `Content-Type`: `application/json`
-  - `Authorization`: `Bearer {token}` (pegar tu token aquí)
+  - `Authorization`: `Bearer {token}`
 - Tab **Body** → `raw` → `JSON`:
 ```json
 {
-  "titulo": "Concurso de Fotografía",
-  "descripcion": "Mejor foto de naturaleza",
+  "titulo": "Concurso de Bellas Artes",
+  "descripcion": "Exhibición anual",
   "fecha_inicio": "2025-01-01T00:00:00",
   "fecha_fin": "2025-12-31T23:59:59",
-  "categorias": [
-    {"nombre": "Paisajes", "descripcion": "Fotos de paisajes"},
-    {"nombre": "Retratos", "descripcion": "Fotos de personas"}
-  ]
+  "categorias": ["{categoria_id_1}", "{categoria_id_2}"]
 }
 ```
 - Click **Send**
 - ✅ Copiar el `id` del concurso de la respuesta
 
 ### Request 2: Listar Concursos
-
 - Nombre: `Listar Concursos`
 - Method: `GET`
 - URL: `http://localhost:5000/concursos?activos=true`
 - Headers: `Authorization: Bearer {token}`
-- Click **Send**
 
 ### Request 3: Ver Detalle
-
 - Nombre: `Detalle Concurso`
 - Method: `GET`
 - URL: `http://localhost:5000/concursos/{concurso_id}`
 - Reemplazar `{concurso_id}` con el ID copiado
-- Click **Send**
-- ✅ Buscar en la respuesta el `id` de una categoría:
-  ```json
-  "categorias": [{"id": "...", "nombre": "Paisajes"}]
-  ```
 
 ---
 
-## 4. Crear Carpeta "Envíos"
+## 5. Gestión Avanzada de Concursos
+
+### Request 4: Actualizar Concurso
+- Nombre: `Actualizar Concurso`
+- Method: `PUT`
+- URL: `http://localhost:5000/concursos/{concurso_id}`
+- Headers: `Authorization: Bearer {token}`
+- Body → `raw` → `JSON`:
+```json
+{
+  "titulo": "Concurso Actualizado",
+  "descripcion": "Nueva descripción"
+}
+```
+
+### Request 5: Cambiar Estado
+- Nombre: `Cambiar Estado`
+- Method: `PATCH`
+- URL: `http://localhost:5000/concursos/{concurso_id}/estado`
+- Headers: `Authorization: Bearer {token}`
+- Body → `raw` → `JSON`:
+```json
+{
+  "estado": "cerrado"
+}
+```
+- ✅ Estados válidos: `activo`, `cerrado`, `cancelado`
+
+### Request 6: Vincular Categoría
+- Nombre: `Vincular Categoría`
+- Method: `POST`
+- URL: `http://localhost:5000/concursos/{concurso_id}/categorias`
+- Headers: `Authorization: Bearer {token}`
+- Body → `raw` → `JSON`:
+```json
+{
+  "categoria_id": "{categoria_id}"
+}
+```
+
+---
+
+## 6. Crear Carpeta "Envíos"
 
 ### Request 1: Crear Envío
-
 - Nombre: `Crear Envío`
 - Method: `POST`
 - URL: `http://localhost:5000/envios`
@@ -124,69 +178,111 @@ Click derecho en la colección → **Add Folder** → Nombre: `Auth`
 - Body → `raw` → `JSON`:
 ```json
 {
-  "titulo": "Atardecer en la playa",
-  "descripcion": "Foto tomada en Cancún",
-  "imagen_url": "https://example.com/playa.jpg",
+  "titulo": "Mi Obra Maestra",
+  "descripcion": "Óleo sobre lienzo",
+  "imagen_url": "https://example.com/obra.jpg",
   "concurso_id": "{concurso_id}",
   "categoria_id": "{categoria_id}",
-  "etiquetas": ["playa", "atardecer", "mar"]
+  "etiquetas": ["arte", "oleo"]
 }
 ```
-- Reemplazar IDs con los valores copiados
-- Click **Send**
-- ✅ Copiar el `id` del envío de la respuesta
 
-### Request 2: Listar Envíos por Concurso
-
+### Request 2: Listar Envíos
 - Nombre: `Listar Envíos`
 - Method: `GET`
 - URL: `http://localhost:5000/envios?concurso={concurso_id}`
-- Click **Send**
 
 ### Request 3: Votar
-
 - Nombre: `Votar Envío`
 - Method: `POST`
 - URL: `http://localhost:5000/envios/{envio_id}/votar`
 - Headers: `Authorization: Bearer {token}`
-- Click **Send**
-- ✅ Respuesta esperada: `{"votos": 1, "mensaje": "Voto registrado"}`
 
 ### Request 4: Ver Ranking
-
 - Nombre: `Ver Ranking`
 - Method: `GET`
 - URL: `http://localhost:5000/envios/concurso/{concurso_id}/ranking?limite=10`
-- Click **Send**
-- ✅ Ver ranking ordenado por votos
 
 ---
 
-## Resumen de Endpoints
+## 7. Comentarios y Notificaciones
 
-| Paso | Method | URL | Headers | Body |
-|------|--------|-----|---------|------|
-| Register | POST | `/auth/register` | Content-Type: json | email, password |
-| Login | POST | `/auth/login` | Content-Type: json | email, password |
-| Crear Concurso | POST | `/concursos` | Authorization + Content-Type | titulo, fechas, categorias |
-| Listar Concursos | GET | `/concursos?activos=true` | Authorization | - |
-| Detalle Concurso | GET | `/concursos/{id}` | - | - |
-| Crear Envío | POST | `/envios` | Authorization + Content-Type | titulo, imagen_url, ids |
-| Listar Envíos | GET | `/envios?concurso={id}` | - | - |
-| Votar | POST | `/envios/{id}/votar` | Authorization | - |
-| Ranking | GET | `/envios/concurso/{id}/ranking` | - | - |
+### Request 1: Añadir Comentario
+- Nombre: `Añadir Comentario`
+- Method: `POST`
+- URL: `http://localhost:5000/votos/comentarios`
+- Body → `raw` → `JSON`:
+```json
+{
+  "user_id": "{tu_user_id}",
+  "submission_id": "{envio_id}",
+  "texto": "¡Increíble trabajo!"
+}
+```
+
+### Request 2: Ver Notificaciones
+- Nombre: `Ver Notificaciones`
+- Method: `GET`
+- URL: `http://localhost:5000/votos/notificaciones/{user_id}`
+
+---
+
+## 8. Perfil de Usuario
+
+### Request 1: Ver Mi Perfil
+- Nombre: `Mi Perfil`
+- Method: `GET`
+- URL: `http://localhost:5000/usuarios/me`
+- Headers: `Authorization: Bearer {token}`
+
+### Request 2: Actualizar Mi Perfil
+- Nombre: `Actualizar Perfil`
+- Method: `PUT`
+- URL: `http://localhost:5000/usuarios/me`
+- Headers: `Authorization: Bearer {token}`
+- Body → `raw` → `JSON`:
+```json
+{
+  "email": "nuevo_email@example.com"
+}
+```
+
+---
+
+## Resumen de Endpoints (Actualizado)
+
+| Paso | Method | URL | Auth |
+|------|--------|-----|------|
+| Register | POST | `/auth/register` | No |
+| Login | POST | `/auth/login` | No |
+| **Crear Categoría** | **POST** | `/categorias` | **Sí** |
+| **Listar Categorías** | **GET** | `/categorias` | **No** |
+| Crear Concurso | POST | `/concursos` | Sí |
+| Listar Concursos | GET | `/concursos` | Sí |
+| Cambiar Estado | PATCH | `/concursos/{id}/estado` | Sí |
+| **Vincular Categoría** | **POST** | `/concursos/{id}/categorias` | **Sí** |
+| Crear Envío | POST | `/envios` | Sí |
+| Actualizar Envío | PUT | `/envios/{id}` | Sí |
+| Eliminar Envío | DELETE | `/envios/{id}` | Sí |
+| Votar | POST | `/envios/{id}/votar` | Sí |
+| Ranking | GET | `/envios/concurso/{id}/ranking` | No |
+| Comentar | POST | `/votos/comentarios` | No |
+| Notificaciones | GET | `/votos/notificaciones/{user_id}` | No |
+| Mi Perfil | GET | `/usuarios/me` | Sí |
 
 ---
 
 ## Flujo Completo de Testing
 
 ```
-1. Register 
-   → 2. Login (guardar token) 
-   → 3. Crear Concurso (guardar concurso_id) 
-   → 4. Crear Envío (usar concurso_id + categoria_id, guardar envio_id) 
-   → 5. Votar (usar envio_id) 
-   → 6. Ver Ranking
+1. Registro/Login 
+   → 2. Gestionar Perfil 
+   → 3. Crear Categorías (Catálogo)
+   → 4. Crear Concurso (Referenciando Categorías)
+   → 5. Crear Envío 
+   → 6. Votar y Comentar 
+   → 7. Revisar Notificaciones 
+   → 8. Ver Ranking
 ```
 
 ---
@@ -194,17 +290,11 @@ Click derecho en la colección → **Add Folder** → Nombre: `Auth`
 ## Troubleshooting
 
 ### Error 403 Forbidden
+- Token expirado o ausente. Haz Login de nuevo.
 - Verificar que el servidor Flask esté corriendo: `python run.py`
-- Verificar que el token no haya expirado (duración: 1 hora)
-- Obtener nuevo token haciendo Login de nuevo
-
-### Error 404 Not Found
-- Verificar que MongoDB esté corriendo: `docker compose ps`
-- Verificar que los IDs usados existan en la base de datos
 
 ### Error 400 Bad Request
-- Verificar que el JSON en el Body sea válido
-- Verificar que todos los campos requeridos estén presentes
+- Revisa el formato JSON y campos requeridos según los esquemas en `app/schemas/`.
 
 ---
 
@@ -216,8 +306,9 @@ Durante el testing, guarda estos valores para reutilizar:
 |----------|-------------|---------|
 | `token` | JWT para autenticación | `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...` |
 | `concurso_id` | ID del concurso creado | `507f1f77bcf86cd799439011` |
-| `categoria_id` | ID de categoría del concurso | `507f1f77bcf86cd799439012` |
 | `envio_id` | ID del envío creado | `507f1f77bcf86cd799439013` |
+| `user_id` | Tu ID de usuario | `507f1f77bcf86cd799439014` |
+| `categoria_id` | ID de la categoría creada | `507f1f77bcf86cd799439015` |
 
 ---
 

@@ -9,8 +9,8 @@ from app.models.categoria import Categoria
 
 def crear_concurso(data, usuario_id):
     """
-    Crea un nuevo concurso con sus categorías.
-    data: dict con titulo, descripcion, fecha_inicio, fecha_fin, categorias (opcional)
+    Crea un nuevo concurso vinculando categorías existentes.
+    data: dict con titulo, descripcion, fecha_inicio, fecha_fin, categorias (lista de IDs opcional)
     usuario_id: ID del admin que lo crea
     Retorna: objeto Concurso guardado
     """
@@ -20,18 +20,15 @@ def crear_concurso(data, usuario_id):
         fecha_inicio=data["fecha_inicio"],
         fecha_fin=data["fecha_fin"],
         creado_por=usuario_id
-    ).save()
+    )
 
     if "categorias" in data:
-        for cat_data in data["categorias"]:
-            categoria = Categoria(
-                nombre=cat_data["nombre"],
-                descripcion=cat_data.get("descripcion", ""),
-                concurso=concurso
-            ).save()
-            concurso.categorias.append(categoria)
-        concurso.save()
-
+        for cat_id in data["categorias"]:
+            categoria = Categoria.objects(id=cat_id).first()
+            if categoria:
+                concurso.categorias.append(categoria)
+    
+    concurso.save()
     return concurso
 
 
@@ -105,25 +102,25 @@ def cambiar_estado_concurso(concurso_id, nuevo_estado):
     return concurso
 
 
-def agregar_categoria(concurso_id, data):
+def agregar_categoria(concurso_id, categoria_id):
     """
-    Agrega una categoría a un concurso existente.
-    data: dict con nombre y descripcion de la categoría
-    Retorna: Categoria creada o None si no existe el concurso
+    Víncula una categoría existente a un concurso.
+    categoria_id: ID de la categoría a vincular
+    Retorna: Categoria vinculada o None si no existe el concurso o la categoría
     """
     concurso = Concurso.objects(id=concurso_id).first()
 
     if not concurso:
         return None
 
-    categoria = Categoria(
-        nombre=data["nombre"],
-        descripcion=data.get("descripcion", ""),
-        concurso=concurso
-    ).save()
+    categoria = Categoria.objects(id=categoria_id).first()
+    if not categoria:
+        return None
 
-    concurso.categorias.append(categoria)
-    concurso.save()
+    # Evitar duplicados en la lista de categorías del concurso
+    if categoria not in concurso.categorias:
+        concurso.categorias.append(categoria)
+        concurso.save()
 
     return categoria
 

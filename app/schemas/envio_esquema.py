@@ -34,7 +34,7 @@ class ConcursoCreateSchema(Schema):
     descripcion = fields.String()
     fecha_inicio = fields.DateTime(required=True)
     fecha_fin = fields.DateTime(required=True)
-    categorias = fields.List(fields.Nested(CategoriaSchema))
+    categorias = fields.List(fields.String())  # Lista de IDs de categorías existentes
 
 
 class VotoSchema(Schema):
