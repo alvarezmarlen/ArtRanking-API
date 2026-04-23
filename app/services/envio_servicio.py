@@ -133,7 +133,7 @@ def votar_envio(envio_id, usuario_id):
         return None, "No puedes votar tu propio envío"
 
     envio.votos += 1
-    envio.votantes.append(usuario_id)
+    envio.votantes.append(ObjectId(usuario_id))
     envio.save()
 
     return envio, None

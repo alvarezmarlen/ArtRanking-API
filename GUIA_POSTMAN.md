@@ -232,13 +232,13 @@ Click derecho en la colección → **Add Folder** → Nombre: `Auth`
 ### Request 1: Ver Mi Perfil
 - Nombre: `Mi Perfil`
 - Method: `GET`
-- URL: `http://localhost:5000/usuarios/me`
+- URL: `http://localhost:5000/users/me`
 - Headers: `Authorization: Bearer {token}`
 
 ### Request 2: Actualizar Mi Perfil
 - Nombre: `Actualizar Perfil`
 - Method: `PUT`
-- URL: `http://localhost:5000/usuarios/me`
+- URL: `http://localhost:5000/users/me`
 - Headers: `Authorization: Bearer {token}`
 - Body → `raw` → `JSON`:
 ```json
@@ -268,7 +268,7 @@ Click derecho en la colección → **Add Folder** → Nombre: `Auth`
 | Ranking | GET | `/envios/concurso/{id}/ranking` | No |
 | Comentar | POST | `/votos/comentarios` | No |
 | Notificaciones | GET | `/votos/notificaciones/{user_id}` | No |
-| Mi Perfil | GET | `/usuarios/me` | Sí |
+| Mi Perfil | GET | `/users/me` | Sí |
 
 ---
 

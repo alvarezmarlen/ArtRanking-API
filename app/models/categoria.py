@@ -13,5 +13,6 @@ class Categoria(Document):
     descripcion = StringField()
 
     meta = {
-        "collection": "categorias"  # nombre de la colección en MongoDB
+        "collection": "categorias",  # nombre de la colección en MongoDB
+        "strict": False              # permite cargar documentos con campos obsoletos (ej: concurso)
     }
