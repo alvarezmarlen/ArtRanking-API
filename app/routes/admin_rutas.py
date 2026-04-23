@@ -27,3 +27,7 @@ def ranking():
 def participantes():
     """Gestión de participantes (Placeholder)."""
     return render_template("admin/dashboard.html")
+@admin_bp.route("/usuarios")
+def usuarios():
+    """Gestión de usuarios (Placeholder)."""
+    return render_template("admin/dashboard.html")
