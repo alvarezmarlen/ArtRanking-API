@@ -1,8 +1,18 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from app.services.auth_servicio import registrar_usuario, login_usuario
 from marshmallow import ValidationError
 
 auth_bp = Blueprint("auth", __name__)
+
+@auth_bp.route("/registro")
+def registro_page():
+    """Render registration page"""
+    return render_template("user/auth/registro.html")
+
+@auth_bp.route("/login")
+def login_page():
+    """Render login page"""
+    return render_template("user/auth/login.html")
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
