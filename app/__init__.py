@@ -11,6 +11,10 @@ from app.routes.categoria_rutas import categoria_bp
 from flask import render_template
 
 from app.routes.admin_rutas import admin_bp
+from app.models.concurso import Concurso
+from app.models.envio import Envio
+from app.models.usuario import Usuario
+from app.models.voto import Voto
 
 def create_app(config_class=DevelopmentConfig):
    app = Flask(__name__)
@@ -29,8 +33,28 @@ def create_app(config_class=DevelopmentConfig):
 
    @app.route("/")
    def home():
-    return render_template("index.html")
-    
+    """Render homepage with real data from database."""
+    # Fetch stats from database
+    total_obras = Envio.objects().count()
+    concursos_activos = Concurso.objects(activo=True, estado="activo").count()
+    total_votos = Voto.objects().count()
+    total_artistas = Usuario.objects().count()
+
+    # Fetch active contests (limit 3 for homepage)
+    # Don't dereference categories to avoid schema mismatch
+    concursos = Concurso.objects(activo=True, estado="activo").limit(3)
+
+    # Fetch featured submissions (limit 4)
+    obras = Envio.objects().order_by('-votos').limit(4)
+
+    return render_template("index.html",
+                          total_obras=total_obras,
+                          concursos_activos=concursos_activos,
+                          total_votos=total_votos,
+                          total_artistas=total_artistas,
+                          concursos=concursos,
+                          obras=obras)
+
    @app.route("/test-db")
    def test_db():
       db = get_db()
