@@ -6,16 +6,15 @@
     <meta name="description" content="Panel de Administración - ArtRanking">
     <title>{% block title %}Admin | ArtRanking{% endblock %}</title>
     
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <div class="admin-layout">
-        <!-- Sidebar Navigation -->
         <aside class="admin-sidebar">
             <div class="sidebar-brand">
                 <h1>ArtRanking</h1>
@@ -60,12 +59,13 @@
             </nav>
         </aside>
 
-        <!-- Main Content Area -->
         <main class="admin-content">
             {% block content %}{% endblock %}
         </main>
     </div>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
