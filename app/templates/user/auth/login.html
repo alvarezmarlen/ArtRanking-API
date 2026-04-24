@@ -1,0 +1,162 @@
+{% extends "layouts/base_user.html" %}
+
+{% block title %}Iniciar Sesión - ArtRanking{% endblock %}
+
+{% block content %}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Iniciar Sesión</h1>
+            <p>Bienvenido de nuevo a ArtRanking</p>
+        </div>
+
+        <form method="POST" action="/auth/login" class="auth-form">
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="tu@email.com" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="••••••••" 
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>¿No tienes cuenta? <a href="/auth/registro">Regístrate gratis</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem var(--container-padding);
+}
+
+.auth-card {
+    background-color: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(25, 27, 36, 0.08);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--on-surface);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+}
+
+.auth-header p {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    margin: 0;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--on-surface);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-group input {
+    padding: 0.75rem 1rem;
+    font-family: var(--font-main);
+    font-size: 14px;
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius);
+    background-color: var(--surface-container-lowest);
+    color: var(--on-surface);
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 71, 200, 0.1);
+}
+
+.form-group input::placeholder {
+    color: var(--outline);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--outline-variant);
+}
+
+.auth-footer p {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    margin: 0;
+}
+
+.auth-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    color: var(--primary-container);
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 1rem var(--container-padding);
+    }
+
+    .auth-card {
+        padding: 1.75rem;
+    }
+}
+</style>
+
+{% endblock %}

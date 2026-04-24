@@ -1,0 +1,216 @@
+{% extends "layouts/base_user.html" %}
+
+{% block title %}Inicio - ArtRanking{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <span class="hero-badge">🏆 Plataforma de Concursos de Arte</span>
+            <h1>Donde el talento artístico encuentra el <span>reconocimiento</span></h1>
+            <p>Participa en concursos, sube tus obras y vota por tus favoritos. El ranking decide a los ganadores. La comunidad artística te espera.</p>
+            <div class="hero-actions">
+                <a href="/concursos" class="btn btn-primary btn-lg">Explorar Concursos</a>
+                <a href="/auth/registro" class="btn btn-secondary btn-lg">Unirse como Artista</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-image-grid">
+                <img src="https://placehold.co/120x120/0047c8/ffffff?text=Arte+1" alt="Obra 1">
+                <img src="https://placehold.co/120x120/025cfd/ffffff?text=Arte+2" alt="Obra 2">
+                <img src="https://placehold.co/120x120/505f76/ffffff?text=Arte+3" alt="Obra 3">
+                <img src="https://placehold.co/120x120/992d00/ffffff?text=Arte+4" alt="Obra 4">
+                <img src="https://placehold.co/120x120/424656/ffffff?text=Arte+5" alt="Obra 5">
+                <img src="https://placehold.co/120x120/191b24/ffffff?text=Arte+6" alt="Obra 6">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="stats-bar">
+    <div class="container">
+        <div class="stat-item">
+            <h3>1,247</h3>
+            <p>Obras Subidas</p>
+        </div>
+        <div class="stat-item">
+            <h3>86</h3>
+            <p>Concursos Activos</p>
+        </div>
+        <div class="stat-item">
+            <h3>15,892</h3>
+            <p>Votos Emitidos</p>
+        </div>
+        <div class="stat-item">
+            <h3>342</h3>
+            <p>Artistas Registrados</p>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="section how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <h2>¿Cómo funciona?</h2>
+            <p>Tres pasos sencillos para participar en la comunidad artística de ArtRanking</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>🔍 Explora</h3>
+                <p>Descubre concursos activos filtrados por categoría. Encuentra el concurso perfecto para tu estilo artístico.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>📤 Sube tu obra</h3>
+                <p>Participa con tus mejores creaciones. Subir tu trabajo es rápido y sencillo, solo necesitas una URL de imagen.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>⭐ Vota y gana</h3>
+                <p>Apoya a otros artistas votando sus obras y escala en el ranking. ¡Los más votados ganan reconocimiento!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Active Contests Preview -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Concursos Activos</h2>
+            <p>Participa en estos concursos abiertos y muestra tu talento al mundo</p>
+        </div>
+        <div class="contests-grid">
+            <div class="contest-card">
+                <div class="contest-card-header">
+                    <h3>Concurso de Pintura Digital 2025</h3>
+                    <div class="contest-tags">
+                        <span class="tag tag-primary">Digital</span>
+                        <span class="tag">Ilustración</span>
+                    </div>
+                </div>
+                <div class="contest-card-body">
+                    <p>Explora los límites de la creatividad digital. Técnicas libres, estilos variados. ¡Sorpréndenos!</p>
+                    <div class="contest-meta">📅 Ene 01 - Dic 31, 2025</div>
+                </div>
+                <div class="contest-card-footer">
+                    <a href="/concursos/1" class="btn btn-primary" style="width:100%">Ver detalles</a>
+                </div>
+            </div>
+            <div class="contest-card">
+                <div class="contest-card-header">
+                    <h3>Arte Abstracto Moderno</h3>
+                    <div class="contest-tags">
+                        <span class="tag tag-primary">Óleo</span>
+                        <span class="tag">Acuarela</span>
+                    </div>
+                </div>
+                <div class="contest-card-body">
+                    <p>Formas, colores y emociones. Un espacio para expresar lo inefable a través del arte abstracto.</p>
+                    <div class="contest-meta">📅 Feb 15 - Jun 30, 2025</div>
+                </div>
+                <div class="contest-card-footer">
+                    <a href="/concursos/2" class="btn btn-primary" style="width:100%">Ver detalles</a>
+                </div>
+            </div>
+            <div class="contest-card">
+                <div class="contest-card-header">
+                    <h3>Retratos del Siglo XXI</h3>
+                    <div class="contest-tags">
+                        <span class="tag tag-primary">Retrato</span>
+                        <span class="tag">Fotografía</span>
+                    </div>
+                </div>
+                <div class="contest-card-body">
+                    <p>Captura la esencia humana en cualquier medio. Rostros que cuentan historias sin palabras.</p>
+                    <div class="contest-meta">📅 Mar 01 - Ago 15, 2025</div>
+                </div>
+                <div class="contest-card-footer">
+                    <a href="/concursos/3" class="btn btn-primary" style="width:100%">Ver detalles</a>
+                </div>
+            </div>
+        </div>
+        <div class="view-all">
+            <a href="/concursos">Ver todos los concursos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Submissions -->
+<section class="section how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <h2>Obras Destacadas</h2>
+            <p>Las creaciones más populares de nuestra comunidad esta semana</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://placehold.co/300x200/0047c8/ffffff?text=Naturaleza+Viva" alt="Naturaleza Viva">
+                <div class="gallery-item-overlay">
+                    <h4 style="color:white; margin:0; font-size:14px;">Naturaleza Viva</h4>
+                    <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @artista01</p>
+                </div>
+                <div class="gallery-item-info">
+                    <h4>Naturaleza Viva</h4>
+                    <p>por @artista01</p>
+                    <div class="gallery-item-votes">⭐ 234 votos</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/300x200/025cfd/ffffff?text=Ciudad+Futura" alt="Ciudad Futura">
+                <div class="gallery-item-overlay">
+                    <h4 style="color:white; margin:0; font-size:14px;">Ciudad Futura</h4>
+                    <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @artista02</p>
+                </div>
+                <div class="gallery-item-info">
+                    <h4>Ciudad Futura</h4>
+                    <p>por @artista02</p>
+                    <div class="gallery-item-votes">⭐ 189 votos</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/300x200/505f76/ffffff?text=Emociones" alt="Emociones">
+                <div class="gallery-item-overlay">
+                    <h4 style="color:white; margin:0; font-size:14px;">Emociones</h4>
+                    <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @artista03</p>
+                </div>
+                <div class="gallery-item-info">
+                    <h4>Emociones</h4>
+                    <p>por @artista03</p>
+                    <div class="gallery-item-votes">⭐ 156 votos</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/300x200/992d00/ffffff?text=Luz+y+Sombra" alt="Luz y Sombra">
+                <div class="gallery-item-overlay">
+                    <h4 style="color:white; margin:0; font-size:14px;">Luz y Sombra</h4>
+                    <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @artista04</p>
+                </div>
+                <div class="gallery-item-info">
+                    <h4>Luz y Sombra</h4>
+                    <p>por @artista04</p>
+                    <div class="gallery-item-votes">⭐ 142 votos</div>
+                </div>
+            </div>
+        </div>
+        <div class="view-all">
+            <a href="/galeria">Explorar galería completa</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>¿Listo para mostrar tu arte al mundo?</h2>
+        <p>Únete a miles de artistas que ya están compitiendo, votando y creciendo juntos en ArtRanking.</p>
+        <a href="/auth/registro" class="btn">Crear cuenta gratis</a>
+    </div>
+</section>
+
+{% endblock %}

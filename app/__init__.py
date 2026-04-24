@@ -29,8 +29,7 @@ def create_app(config_class=DevelopmentConfig):
 
    @app.route("/")
    def home():
-# Como base.html está dentro de la carpeta 'layouts'
-    return render_template("user/index.html")
+    return render_template("index.html")
     
    @app.route("/test-db")
    def test_db():
