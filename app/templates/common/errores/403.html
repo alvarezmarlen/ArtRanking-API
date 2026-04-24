@@ -1,0 +1,76 @@
+{% extends "layouts/base_user.html" %}
+
+{% block title %}Acceso Denegado - ArtRanking{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-card">
+        <div class="error-icon">🚫</div>
+        <h1>Acceso Denegado</h1>
+        <p>Lo sentimos, no tienes los permisos necesarios para acceder a esta sección. Esta área está reservada únicamente para administradores.</p>
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">Volver al Inicio</a>
+            {% if not g.user %}
+                <a href="/auth/login" class="btn btn-secondary">Iniciar Sesión</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.error-container {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem var(--container-padding);
+}
+
+.error-card {
+    background-color: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-lg);
+    padding: 3rem;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(25, 27, 36, 0.08);
+}
+
+.error-icon {
+    font-size: 64px;
+    margin-bottom: 1.5rem;
+}
+
+.error-card h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--on-surface);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.error-card p {
+    font-size: 16px;
+    color: var(--on-surface-variant);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+@media (max-width: 480px) {
+    .error-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}

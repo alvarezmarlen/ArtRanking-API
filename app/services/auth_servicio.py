@@ -12,7 +12,8 @@ def registrar_usuario(data):
 
     user = Usuario(
         email=data["email"],
-        password=password_hash
+        password=password_hash,
+        role="user" # Asegurar rol por defecto
     ).save()
 
     return user, None
@@ -21,11 +22,7 @@ def registrar_usuario(data):
 def login_usuario(data):
     user = Usuario.objects(email=data["email"]).first()
 
-    if not user:
+    if not user or not check_password_hash(user.password, data["password"]):
         return None
 
-    if not check_password_hash(user.password, data["password"]):
-        return None
-
-    token = generar_token(user)
-    return token
+    return user #Devolvemos el objeto de usuario para manejarlo en la ruta

@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for, make_response, flash
 from app.services.auth_servicio import registrar_usuario, login_usuario
 from marshmallow import ValidationError
+from app.utils.jwt_utils import generar_token   
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -9,33 +10,58 @@ def registro_page():
     """Render registration page"""
     return render_template("user/auth/registro.html")
 
-@auth_bp.route("/login")
+@auth_bp.route("/login", methods=["GET"])
 def login_page():
     """Render login page"""
     return render_template("user/auth/login.html")
 
+
+
 @auth_bp.route("/register", methods=["POST"])
 def register():
-    from app.schemas.usuario_esquema import UsuarioSchema
-
-    schema = UsuarioSchema()
-    try:
-        data = schema.load(request.json)
-    except ValidationError as err:
-        return jsonify({"error": err.messages}), 400
-
-    user, error = registrar_usuario(data)
-
+    data = request.form
+    email = data.get("email")
+    password = data.get("password")
+    password_confirm = data.get("password_confirm")
+    if password != password_confirm:
+        flash("Las contraseñas no coinciden", "error")
+        return redirect(url_for("auth.registro_page"))
+    user, error = registrar_usuario({"email": email, "password": password})
     if error:
-        return jsonify({"error": error}), 409
-
-    return jsonify({"id": str(user.id)}), 201
+        flash(error, "error")
+        return redirect(url_for("auth.registro_page"))
+    # Login automático tras registro
+    token = generar_token(user)
+    response = make_response(redirect(url_for("home")))
+    response.set_cookie("access_token", token, httponly=True, samesite='Lax')
+    flash("Cuenta creada exitosamente", "success")
+    return response
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
-    token = login_usuario(request.json)
+    data = request.form
+    user = login_usuario(data)
+    if not user:
+        flash("Credenciales inválidas", "error")
+        return redirect(url_for("auth.login_page"))
+    token = generar_token(user)
 
-    if not token:
-        return jsonify({"error": "Credenciales inválidas"}), 401
+     # --- LOGICA DE REDIRECCIÓN POR ROL ---
+    if user.role == "admin":
+        target_url = url_for("admin.dashboard")
+    else:
+        target_url = url_for("home")
+    # -------------------------------------
 
-    return jsonify({"token": token})
+    response = make_response(redirect(target_url))
+    # Seteamos la cookie HttpOnly
+    response.set_cookie("access_token", token, httponly=True, samesite='Lax')
+    flash(f"Bienvenido de nuevo, {user.email}", "success")
+    return response
+
+@auth_bp.route("/logout")
+def logout():
+    response = make_response(redirect(url_for("home")))
+    response.delete_cookie("access_token")
+    flash("Sesión cerrada", "info")
+    return response

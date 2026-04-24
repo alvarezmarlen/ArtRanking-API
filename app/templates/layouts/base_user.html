@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container">
@@ -23,22 +25,33 @@
                 <li><a href="/galeria">Galería</a></li>
             </ul>
             <div class="nav-actions">
+                {% if g.user %}
+                <span class="user-email">{{ g.user.email }}</span>
+                <a href="/auth/logout" class="btn btn-ghost">Cerrar Sesión</a>
+                {% else %}
                 <a href="/auth/login" class="btn btn-ghost">Iniciar sesión</a>
                 <a href="/auth/registro" class="btn btn-primary">Registrarse</a>
+                {% endif %}
             </div>
         </div>
+
     </nav>
 
     <main>
+        {% include 'common/_alerts.html' %}
         {% block content %}{% endblock %}
     </main>
+
+    <script src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+
 
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
                     <h3>🎨 ArtRanking</h3>
-                    <p>La plataforma donde el talento artístico se encuentra con el reconocimiento. Participa, vota y descubre nuevos artistas.</p>
+                    <p>La plataforma donde el talento artístico se encuentra con el reconocimiento. Participa, vota y
+                        descubre nuevos artistas.</p>
                 </div>
                 <div class="footer-column">
                     <h4>Plataforma</h4>
@@ -72,4 +85,5 @@
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
 </html>

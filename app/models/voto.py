@@ -1,6 +1,6 @@
-from mongoengine import Document, StringField, IntField
+from mongoengine import Document, ReferenceField, IntField
 
 class Voto(Document):
-    user_id = StringField(required=True)
-    submission_id = StringField(required=True)
+    usuario = ReferenceField('Usuario', required=True)
+    envio = ReferenceField('Envio', required=True)
     value = IntField(default=1)
