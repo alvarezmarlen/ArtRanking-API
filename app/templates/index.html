@@ -33,19 +33,19 @@
 <section class="stats-bar">
     <div class="container">
         <div class="stat-item">
-            <h3>1,247</h3>
+            <h3>{{ total_obras }}</h3>
             <p>Obras Subidas</p>
         </div>
         <div class="stat-item">
-            <h3>86</h3>
+            <h3>{{ concursos_activos }}</h3>
             <p>Concursos Activos</p>
         </div>
         <div class="stat-item">
-            <h3>15,892</h3>
+            <h3>{{ total_votos }}</h3>
             <p>Votos Emitidos</p>
         </div>
         <div class="stat-item">
-            <h3>342</h3>
+            <h3>{{ total_artistas }}</h3>
             <p>Artistas Registrados</p>
         </div>
     </div>
@@ -86,54 +86,26 @@
             <p>Participa en estos concursos abiertos y muestra tu talento al mundo</p>
         </div>
         <div class="contests-grid">
-            <div class="contest-card">
-                <div class="contest-card-header">
-                    <h3>Concurso de Pintura Digital 2025</h3>
-                    <div class="contest-tags">
-                        <span class="tag tag-primary">Digital</span>
-                        <span class="tag">Ilustración</span>
+            {% if concursos %}
+                {% for concurso in concursos %}
+                <div class="contest-card">
+                    <div class="contest-card-header">
+                        <h3>{{ concurso.titulo }}</h3>
+                    </div>
+                    <div class="contest-card-body">
+                        <p>{{ concurso.descripcion }}</p>
+                        <div class="contest-meta">
+                            📅 {{ concurso.fecha_inicio.strftime('%b %d') if concurso.fecha_inicio else '' }} - {{ concurso.fecha_fin.strftime('%b %d, %Y') if concurso.fecha_fin else '' }}
+                        </div>
+                    </div>
+                    <div class="contest-card-footer">
+                        <a href="/concursos/{{ concurso.id }}/detalle" class="btn btn-primary" style="width:100%">Ver detalles</a>
                     </div>
                 </div>
-                <div class="contest-card-body">
-                    <p>Explora los límites de la creatividad digital. Técnicas libres, estilos variados. ¡Sorpréndenos!</p>
-                    <div class="contest-meta">📅 Ene 01 - Dic 31, 2025</div>
-                </div>
-                <div class="contest-card-footer">
-                    <a href="/concursos/1" class="btn btn-primary" style="width:100%">Ver detalles</a>
-                </div>
-            </div>
-            <div class="contest-card">
-                <div class="contest-card-header">
-                    <h3>Arte Abstracto Moderno</h3>
-                    <div class="contest-tags">
-                        <span class="tag tag-primary">Óleo</span>
-                        <span class="tag">Acuarela</span>
-                    </div>
-                </div>
-                <div class="contest-card-body">
-                    <p>Formas, colores y emociones. Un espacio para expresar lo inefable a través del arte abstracto.</p>
-                    <div class="contest-meta">📅 Feb 15 - Jun 30, 2025</div>
-                </div>
-                <div class="contest-card-footer">
-                    <a href="/concursos/2" class="btn btn-primary" style="width:100%">Ver detalles</a>
-                </div>
-            </div>
-            <div class="contest-card">
-                <div class="contest-card-header">
-                    <h3>Retratos del Siglo XXI</h3>
-                    <div class="contest-tags">
-                        <span class="tag tag-primary">Retrato</span>
-                        <span class="tag">Fotografía</span>
-                    </div>
-                </div>
-                <div class="contest-card-body">
-                    <p>Captura la esencia humana en cualquier medio. Rostros que cuentan historias sin palabras.</p>
-                    <div class="contest-meta">📅 Mar 01 - Ago 15, 2025</div>
-                </div>
-                <div class="contest-card-footer">
-                    <a href="/concursos/3" class="btn btn-primary" style="width:100%">Ver detalles</a>
-                </div>
-            </div>
+                {% endfor %}
+            {% else %}
+                <p style="grid-column: 1/-1; text-align: center; color: var(--on-surface-variant);">No hay concursos activos</p>
+            {% endif %}
         </div>
         <div class="view-all">
             <a href="/concursos">Ver todos los concursos</a>
@@ -149,54 +121,24 @@
             <p>Las creaciones más populares de nuestra comunidad esta semana</p>
         </div>
         <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="https://placehold.co/300x200/0047c8/ffffff?text=Naturaleza+Viva" alt="Naturaleza Viva">
-                <div class="gallery-item-overlay">
-                    <h4 style="color:white; margin:0; font-size:14px;">Naturaleza Viva</h4>
-                    <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @artista01</p>
+            {% if obras %}
+                {% for obra in obras %}
+                <div class="gallery-item">
+                    <img src="{{ obra.imagen_url }}" alt="{{ obra.titulo }}">
+                    <div class="gallery-item-overlay">
+                        <h4 style="color:white; margin:0; font-size:14px;">{{ obra.titulo }}</h4>
+                        <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @{{ obra.autor.email.split('@')[0] if obra.autor else 'anonimo' }}</p>
+                    </div>
+                    <div class="gallery-item-info">
+                        <h4>{{ obra.titulo }}</h4>
+                        <p>por @{{ obra.autor.email.split('@')[0] if obra.autor else 'anonimo' }}</p>
+                        <div class="gallery-item-votes">⭐ {{ obra.votos }} votos</div>
+                    </div>
                 </div>
-                <div class="gallery-item-info">
-                    <h4>Naturaleza Viva</h4>
-                    <p>por @artista01</p>
-                    <div class="gallery-item-votes">⭐ 234 votos</div>
-                </div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://placehold.co/300x200/025cfd/ffffff?text=Ciudad+Futura" alt="Ciudad Futura">
-                <div class="gallery-item-overlay">
-                    <h4 style="color:white; margin:0; font-size:14px;">Ciudad Futura</h4>
-                    <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @artista02</p>
-                </div>
-                <div class="gallery-item-info">
-                    <h4>Ciudad Futura</h4>
-                    <p>por @artista02</p>
-                    <div class="gallery-item-votes">⭐ 189 votos</div>
-                </div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://placehold.co/300x200/505f76/ffffff?text=Emociones" alt="Emociones">
-                <div class="gallery-item-overlay">
-                    <h4 style="color:white; margin:0; font-size:14px;">Emociones</h4>
-                    <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @artista03</p>
-                </div>
-                <div class="gallery-item-info">
-                    <h4>Emociones</h4>
-                    <p>por @artista03</p>
-                    <div class="gallery-item-votes">⭐ 156 votos</div>
-                </div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://placehold.co/300x200/992d00/ffffff?text=Luz+y+Sombra" alt="Luz y Sombra">
-                <div class="gallery-item-overlay">
-                    <h4 style="color:white; margin:0; font-size:14px;">Luz y Sombra</h4>
-                    <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @artista04</p>
-                </div>
-                <div class="gallery-item-info">
-                    <h4>Luz y Sombra</h4>
-                    <p>por @artista04</p>
-                    <div class="gallery-item-votes">⭐ 142 votos</div>
-                </div>
-            </div>
+                {% endfor %}
+            {% else %}
+                <p style="grid-column: 1/-1; text-align: center; color: var(--on-surface-variant);">No hay obras destacadas</p>
+            {% endif %}
         </div>
         <div class="view-all">
             <a href="/galeria">Explorar galería completa</a>

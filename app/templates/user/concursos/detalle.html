@@ -1,0 +1,119 @@
+{% extends "layouts/base_user.html" %}
+
+{% block title %}{{ concurso.titulo }} - ArtRanking{% endblock %}
+
+{% block content %}
+
+<!-- Contest Detail Header -->
+<section class="section">
+    <div class="container">
+        <a href="/concursos" class="btn btn-ghost" style="margin-bottom: 1rem;">← Volver a concursos</a>
+        
+        <div class="contest-detail-header">
+            <h1>{{ concurso.titulo }}</h1>
+            <div class="contest-detail-meta">
+                <span class="badge badge-{{ 'success' if concurso.estado == 'activo' else 'warning' }}">
+                    {{ concurso.estado|upper }}
+                </span>
+                <span class="contest-detail-date">
+                    📅 {{ concurso.fecha_inicio.strftime('%b %d, %Y') if concurso.fecha_inicio else '' }} - {{ concurso.fecha_fin.strftime('%b %d, %Y') if concurso.fecha_fin else '' }}
+                </span>
+            </div>
+        </div>
+
+        <div class="contest-detail-content">
+            <div class="contest-detail-description">
+                <h2>Descripción</h2>
+                <p>{{ concurso.descripcion }}</p>
+            </div>
+
+            <div class="contest-detail-actions">
+                <button class="btn btn-primary btn-lg">Participar en este concurso</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.contest-detail-header {
+    margin-bottom: 2rem;
+}
+
+.contest-detail-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--on-surface);
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+}
+
+.contest-detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-success {
+    background-color: var(--tertiary);
+    color: var(--on-tertiary);
+}
+
+.badge-warning {
+    background-color: var(--secondary-container);
+    color: var(--on-secondary-container);
+}
+
+.contest-detail-date {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+}
+
+.contest-detail-content {
+    display: grid;
+    gap: 2rem;
+}
+
+.contest-detail-description h2,
+.contest-detail-categories h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--on-surface);
+    margin-bottom: 1rem;
+}
+
+.contest-detail-description p {
+    font-size: 16px;
+    color: var(--on-surface-variant);
+    line-height: 1.6;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.contest-detail-actions {
+    padding-top: 1rem;
+    border-top: 1px solid var(--outline-variant);
+}
+
+@media (max-width: 768px) {
+    .contest-detail-header h1 {
+        font-size: 24px;
+    }
+}
+</style>
+
+{% endblock %}
