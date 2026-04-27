@@ -21,7 +21,7 @@
             <input type="text" placeholder="Buscar concurso...">
         </div>
         <div class="filter-select">
-            <select>
+            <select id="filtroEstado" onchange="filtrarConcursos()">
                 <option value="">Todos los Estados</option>
                 <option value="activo">Activo</option>
                 <option value="cerrado">Cerrado</option>
@@ -41,7 +41,7 @@
             </thead>
             <tbody>
                 {% for c in concursos %}
-                <tr>
+                <tr class="fila-concurso" data-estado="{{ c.estado|lower }}">
                     <td>
                         <span class="main-text">{{ c.titulo }}</span>
                         <span class="sub-text">{{ c.descripcion[:40] }}...</span>

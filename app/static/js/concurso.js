@@ -98,3 +98,20 @@ async function eliminarConcurso(id) {
         alert("Error de conexión");
     }
 }
+
+// 5. FILTRAR CONCURSOS POR ESTADO
+function filtrarConcursos() {
+    const filtro = document.getElementById('filtroEstado').value.toLowerCase();
+    const filas = document.querySelectorAll('.fila-concurso');
+
+    filas.forEach(fila => {
+        const estadoConcurso = fila.getAttribute('data-estado');
+        
+        // Si el filtro está vacío ("Todos") o coincide con el estado de la fila
+        if (filtro === "" || estadoConcurso === filtro) {
+            fila.style.display = ""; // Muestra la fila
+        } else {
+            fila.style.display = "none"; // Oculta la fila
+        }
+    });
+}
