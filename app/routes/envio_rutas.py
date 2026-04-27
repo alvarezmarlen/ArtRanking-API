@@ -1,9 +1,7 @@
-"""
-Rutas de Envíos (Blueprint).
-Endpoints REST para gestionar envíos (submissions) de obras a concursos.
-Prefijo URL: /envios
-"""
-from flask import Blueprint, jsonify, request
+import os
+import uuid
+from flask import Blueprint, jsonify, request, current_app
+from werkzeug.utils import secure_filename
 from app.services.envio_servicio import (
     crear_envio,
     obtener_envios,
@@ -15,8 +13,60 @@ from app.services.envio_servicio import (
     obtener_ranking
 )
 from app.utils.decoradores import jwt_requerido
+from mongoengine.errors import DoesNotExist
 
 envio_bp = Blueprint("envio", __name__)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
+
+@envio_bp.route("/participar", methods=["POST"])
+@jwt_requerido
+def participar():
+    """Subir obra a un concurso (Multipart/Form-data)."""
+    # 1. Validar si hay archivo
+    if 'archivo' not in request.files:
+        return jsonify({"error": "No se seleccionó ningún archivo"}), 400
+    
+    file = request.files['archivo']
+    if file.filename == '':
+        return jsonify({"error": "Archivo vacío"}), 400
+    
+    if file and allowed_file(file.filename):
+        # Generar nombre único para evitar colisiones
+        ext = file.filename.rsplit('.', 1)[1].lower()
+        filename = f"{uuid.uuid4().hex}.{ext}"
+        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        
+        # Guardar archivo
+        file.save(filepath)
+        
+        # 2. Obtener datos del formulario
+        data = {
+            "titulo": request.form.get("titulo"),
+            "descripcion": request.form.get("descripcion"),
+            "concurso_id": request.form.get("concurso_id"),
+            "categoria_id": request.form.get("categoria_id"),
+            "imagen_url": f"uploads/{filename}" # Ruta relativa para el frontend
+        }
+        
+        # 3. Crear envío en DB
+        envio, error = crear_envio(data, request.user["user_id"])
+        
+        if error:
+            # Si falla la DB, borramos el archivo subido para no dejar basura
+            if os.path.exists(filepath):
+                os.remove(filepath)
+            return jsonify({"error": error}), 400
+            
+        return jsonify({
+            "id": str(envio.id),
+            "titulo": envio.titulo,
+            "mensaje": "¡Has participado con éxito!"
+        }), 201
+    
+    return jsonify({"error": "Extensión de archivo no permitida"}), 400
 
 
 @envio_bp.route("", methods=["POST"])  # POST /envios

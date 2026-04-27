@@ -28,11 +28,99 @@
             </div>
 
             <div class="contest-detail-actions">
-                <button class="btn btn-primary btn-lg">Participar en este concurso</button>
+                <button class="btn btn-primary btn-lg" onclick="openModal('participate-modal')">Participar en este concurso</button>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Participation Modal -->
+<div id="participate-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Participar en el concurso</h3>
+            <button class="btn-close" onclick="closeModal('participate-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="participate-form" enctype="multipart/form-data">
+                <input type="hidden" name="concurso_id" value="{{ concurso.id }}">
+                
+                <div class="form-group">
+                    <label for="titulo">Título de la obra</label>
+                    <input type="text" id="titulo" name="titulo" required placeholder="Ej: Atardecer en el bosque">
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" placeholder="Cuenta un poco sobre tu obra..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoria_id">Categoría</label>
+                    <select id="categoria_id" name="categoria_id" required>
+                        <option value="">Selecciona una categoría</option>
+                        {% for cat in concurso.categorias %}
+                        <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="archivo">Tu obra (Imagen o PDF)</label>
+                    <input type="file" id="archivo" name="archivo" required accept="image/*,application/pdf">
+                    <small style="color: var(--on-surface-variant); display: block; margin-top: 4px;">
+                        Formatos permitidos: JPG, PNG, GIF, PDF. Máximo 16MB.
+                    </small>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('participate-modal')">Cancelar</button>
+            <button type="submit" form="participate-form" class="btn btn-primary">Enviar Obra</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const participateForm = document.getElementById('participate-form');
+    if (participateForm) {
+        participateForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.closest('.modal-content').querySelector('button[type="submit"]');
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Enviando...';
+                
+                const response = await fetch('/envios/participar', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert(result.mensaje, 'success');
+                    closeModal('participate-modal');
+                    // Opcional: Redirigir a galería o recargar
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    showAlert(result.error || 'Ocurrió un error al enviar tu obra', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Error de conexión con el servidor', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Obra';
+            }
+        });
+    }
+});
+</script>
 
 <style>
 .contest-detail-header {

@@ -27,6 +27,9 @@
             <div class="nav-actions">
                 {% if g.user %}
                 <span class="user-email">{{ g.user.email }}</span>
+                {% if g.user.role == 'admin' %}
+                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Panel Admin</a>
+                {% endif %}
                 <a href="/auth/logout" class="btn btn-ghost">Cerrar Sesión</a>
                 {% else %}
                 <a href="/auth/login" class="btn btn-ghost">Iniciar sesión</a>

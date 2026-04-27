@@ -218,6 +218,13 @@ body {
     justify-content: center;
 }
 
+.nav-separator {
+    height: 1px;
+    background-color: var(--outline-variant);
+    margin: 0.5rem 1.5rem;
+    opacity: 0.5;
+}
+
 /* Content Area */
 .page-header {
     margin-bottom: 2rem;

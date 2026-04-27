@@ -1,15 +1,16 @@
 {% extends "layouts/base_user.html" %}
 
-{% block title %}Página no encontrada - ArtRanking{% endblock %}
+{% block title %}Error del Servidor - ArtRanking{% endblock %}
 
 {% block content %}
 <div class="error-container">
     <div class="error-card">
-        <div class="error-icon">🔍</div>
-        <h1>404 - No Encontrado</h1>
-        <p>{{ message or "Lo sentimos, la página que buscas no existe o ha sido movida. Por favor, verifica la URL o vuelve al inicio." }}</p>
+        <div class="error-icon">🛠️</div>
+        <h1>Error Interno</h1>
+        <p>Algo salió mal en nuestros servidores. Estamos trabajando para solucionarlo. Por favor, intenta recargar la página más tarde.</p>
         <div class="error-actions">
-            <a href="/" class="btn btn-primary">Volver al Inicio</a>
+            <a href="/" class="btn btn-primary">Ir al Inicio</a>
+            <button onclick="window.location.reload()" class="btn btn-secondary">Reintentar</button>
         </div>
     </div>
 </div>

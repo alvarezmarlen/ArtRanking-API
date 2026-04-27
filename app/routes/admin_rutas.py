@@ -33,7 +33,7 @@ def participantes():
 @admin_bp.route("/usuarios")
 def usuarios():
     """Gestión de usuarios."""
-    usuarios_list = Usuario.objects.all()
+    usuarios_list = Usuario.objects().filter(role='admin').all()
     return render_template("admin/usuarios.html", usuarios=usuarios_list)
 
 @admin_bp.route("/usuarios/crear", methods=["POST"])

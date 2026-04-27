@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, redirect, url_for, g, flash
 from config import DevelopmentConfig
 from app.extensiones.db import init_db
@@ -50,12 +51,31 @@ def create_app(config_class=DevelopmentConfig):
       if request.blueprint == 'admin' and (not g.user or g.user.role != 'admin'):
          return redirect(url_for("error_403"))
       
+   # Asegurar que la carpeta de uploads exista
+   os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
    # Inicializar DB
    init_db(app)
 
    @app.route("/error-403")
    def error_403():
       return render_template("common/errores/403.html"), 403
+
+   @app.errorhandler(404)
+   def page_not_found(e):
+      return render_template("common/errores/404.html"), 404
+
+   @app.errorhandler(500)
+   @app.errorhandler(Exception)
+   def internal_server_error(e):
+      # Log the error here if needed
+      return render_template("common/errores/500.html"), 500
+
+   # Handler específico para errores de base de datos (documentos que no existen)
+   from mongoengine.errors import DoesNotExist
+   @app.errorhandler(DoesNotExist)
+   def handle_does_not_exist(e):
+      return render_template("common/errores/404.html", message="El recurso solicitado no existe o ha sido eliminado."), 404
 
    @app.route("/")
    def home():
@@ -66,12 +86,29 @@ def create_app(config_class=DevelopmentConfig):
     total_votos = Voto.objects().count()
     total_artistas = Usuario.objects().count()
 
-    # Fetch active contests (limit 3 for homepage)
-    # Don't dereference categories to avoid schema mismatch
-    concursos = Concurso.objects(activo=True, estado="activo").limit(3)
+    # Fetch active contests safely
+    concursos_query = Concurso.objects(activo=True, estado="activo").limit(3)
+    concursos = []
+    for c in concursos_query:
+        try:
+            # Forzamos la dereferencia para verificar que existe
+            if c.creado_por:
+                concursos.append(c)
+            if len(concursos) >= 3: break
+        except DoesNotExist:
+            continue
 
-    # Fetch featured submissions (limit 4)
-    obras = Envio.objects().order_by('-votos').limit(4)
+    # Fetch featured submissions safely
+    obras_query = Envio.objects().order_by('-votos').limit(3)
+    obras = []
+    for o in obras_query:
+        try:
+            # Verificamos autor y concurso
+            if o.autor and o.concurso:
+                obras.append(o)
+            if len(obras) >= 4: break
+        except DoesNotExist:
+            continue
 
     return render_template("index.html",
                           total_obras=total_obras,
