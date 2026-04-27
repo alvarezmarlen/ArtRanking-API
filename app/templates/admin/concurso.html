@@ -56,11 +56,8 @@
                     </td>
                     <td class="text-right">
                         <div class="action-buttons">
-                            <a href="javascript:void(0)" onclick="abrirModal('{{ c._id }}')" class="btn-edit">Editar</a>
-                            
-                            <form action="/admin/concursos/eliminar/{{ c._id }}" method="POST" style="display:inline;">
-                                <button type="submit" class="btn-delete" onclick="return confirm('¿Eliminar este concurso?')">Borrar</button>
-                            </form>
+                            <a href="javascript:void(0)" onclick="abrirModal('{{ c._id }}')" class="btn-edit">Editar</a>                            
+                            <button onclick="eliminarConcurso('{{ c._id }}')" class="btn-delete">Borrar</button>
                         </div>
                     </td>
                 </tr>

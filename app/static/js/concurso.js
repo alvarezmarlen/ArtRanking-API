@@ -71,3 +71,30 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 });
+
+
+// 4. ELIMINAR CONCURSO
+async function eliminarConcurso(id) {
+    // Pedimos confirmación al usuario
+    if (!confirm('¿Estás seguro de que deseas eliminar este concurso?')) {
+        return; 
+    }
+
+    try {
+        // Llamamos a la ruta que creamos en Python
+        const response = await fetch(`/admin/api/concursos/eliminar/${id}`, {
+            method: 'POST' // Usamos POST para que coincida con la ruta de Python
+        });
+
+        if (response.ok) {
+            console.log("Eliminado con éxito");
+            window.location.reload(); // Recargamos para que desaparezca de la tabla
+        } else {
+            const errorData = await response.json();
+            alert("Error: " + (errorData.message || "No se pudo eliminar"));
+        }
+    } catch (error) {
+        console.error("Error al eliminar:", error);
+        alert("Error de conexión");
+    }
+}
