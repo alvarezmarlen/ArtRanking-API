@@ -70,36 +70,41 @@
         </table>
     </div>
 
-    <div id="modalConcurso" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Nuevo Concurso</h3>
-                <button onclick="cerrarModal()" class="btn-close" type="button">&times;</button>
-            </div>
-            <form id="formConcurso">
-                <input type="hidden" id="concursoId" name="id">
-                <div class="form-group">
-                    <label>Título</label>
-                    <input type="text" id="titulo" name="titulo" required>
-                </div>
-                <div class="form-group">
-                    <label>Descripción</label>
-                    <textarea id="descripcion" name="descripcion" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Estado</label>
-                    <select id="estado" name="estado">
-                        <option value="activo">Activo</option>
-                        <option value="cerrado">Cerrado</option>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" onclick="cerrarModal()" class="btn-cancel">Cancelar</button>
-                    <button type="submit" class="btn-save">Guardar Concurso</button>
-                </div>
-            </form>
+<!-- MODAL DE CREAR y EDITAR -->   
+<div id="modalConcurso" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle" style="margin-top:0; color:#111827;">Nuevo Concurso</h3>
         </div>
+        
+        <form id="formConcurso">
+            <input type="hidden" id="concursoId" name="id">
+            
+            <div class="form-group">
+                <label>TÍTULO</label>
+                <input type="text" id="titulo" name="titulo" required placeholder="Ej: Certamen Bilbao 2026">
+            </div>
+
+            <div class="form-group">
+                <label>DESCRIPCIÓN</label>
+                <textarea id="descripcion" name="descripcion" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>ESTADO</label>
+                <select id="estado" name="estado">
+                    <option value="activo">Activo</option>
+                    <option value="cerrado">Cerrado</option>
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" onclick="cerrarModal()" class="btn-cancel">Cancelar</button>
+                <button type="submit" class="btn-save">Guardar Concurso</button>
+            </div>
+        </form>
     </div>
+</div>
 </div>
 {% endblock %}
 
