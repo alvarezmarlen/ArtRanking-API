@@ -19,11 +19,18 @@ def votar(data, user_id):
         return None, "Ya has votado por esta obra"
 
     # Crear el voto
-    voto = Voto(usuario=user_id, envio=data["submission_id"]).save()
+    voto = Voto(usuario=user_id, envio=envio).save()
 
     # Actualizar el contador de votos y la lista de votantes en el Envío
-    # Usamos update para asegurar atomicidad
-    envio.update(inc__votos=1, push__votantes=user_id)
+    # Obtenemos el objeto usuario para la lista de referencias
+    from app.models.usuario import Usuario
+    usuario_vota = Usuario.objects(id=user_id).first()
+    
+    if usuario_vota:
+        if usuario_vota not in envio.votantes:
+            envio.votantes.append(usuario_vota)
+            envio.votos = (envio.votos or 0) + 1
+            envio.save()
 
     # Notificación al autor de la obra
     Notificacion(
