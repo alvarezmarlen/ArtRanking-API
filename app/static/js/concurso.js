@@ -7,7 +7,7 @@ async function abrirModal(id = null) {
     const form = document.getElementById('formConcurso');
     const title = document.getElementById('modalTitle');
     
-    if (!modal || !form) return; // Seguridad
+    if (!modal || !form) return; 
 
     form.reset(); 
     document.getElementById('concursoId').value = id || '';
@@ -15,16 +15,26 @@ async function abrirModal(id = null) {
     if (id) {
         title.innerText = "Editar Concurso";
         try {
-            // Buscamos los datos en tu nueva ruta de Python
             const response = await fetch(`/admin/api/concursos/${id}`);
             if (!response.ok) throw new Error("No se pudo obtener el concurso");
             
             const data = await response.json();
             
-            // Rellenamos los campos con lo que viene de MongoDB
             document.getElementById('titulo').value = data.titulo || '';
             document.getElementById('descripcion').value = data.descripcion || '';
             document.getElementById('estado').value = data.estado || 'activo';
+
+            // --- ESTO ES LO NUEVO ---
+            // Los inputs de tipo 'date' necesitan el formato YYYY-MM-DD
+            // Usamos split('T')[0] para limpiar la fecha que viene de Python
+            if (data.fecha_inicio) {
+                document.getElementById('fecha_inicio').value = data.fecha_inicio.split('T')[0];
+            }
+            if (data.fecha_fin) {
+                document.getElementById('fecha_fin').value = data.fecha_fin.split('T')[0];
+            }
+            // ------------------------
+
         } catch (error) {
             console.error("Error al cargar datos:", error);
             alert("No se pudieron cargar los datos del concurso");

@@ -21,6 +21,9 @@ from app.models.voto import Voto
 def create_app(config_class=DevelopmentConfig):
    app = Flask(__name__)
    app.config.from_object(config_class)
+   
+   # --- LÍNEA NUEVA: OBLIGATORIA PARA USAR session ---
+   app.secret_key = 'aranking_secret_2026'
 
    app.register_blueprint(auth_bp, url_prefix="/auth")
    app.register_blueprint(usuario_bp, url_prefix="/users")
@@ -43,6 +46,11 @@ def create_app(config_class=DevelopmentConfig):
          if payload:
             # Opcional: Cargar usuario en g.user para usarlo en templates
             g.user = Usuario.objects(id=payload["user_id"]).first()
+            
+            # --- LÍNEA NUEVA: Aseguramos que la sesión tenga el ID para las rutas de admin ---
+            if g.user:
+                from flask import session
+                session["user_id"] = str(g.user.id)
 
       # Si no hay usuario y la ruta no es pública
       if not g.user and request.endpoint not in public_endpoints:
