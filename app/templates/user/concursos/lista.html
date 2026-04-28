@@ -1,0 +1,156 @@
+{% extends "layouts/base_user.html" %}
+
+{% block title %}Concursos - ArtRanking{% endblock %}
+
+{% block content %}
+
+<!-- Header Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h1>Concursos</h1>
+            <p>Explora todos los concursos disponibles y participa con tus obras</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <a href="/concursos?activos=true" class="filter-tab {% if mostrar_activos %}active{% endif %}">
+                Activos
+            </a>
+            <a href="/concursos?activos=false" class="filter-tab {% if not mostrar_activos %}active{% endif %}">
+                Todos
+            </a>
+        </div>
+
+        <!-- Contests Grid -->
+        <div class="contests-grid">
+            {% if concursos %}
+                {% for concurso in concursos %}
+                <a href="/concursos/{{ concurso.id }}/detalle" class="contest-card-link">
+                    <div class="contest-card">
+                        <div class="contest-card-header">
+                            <h3>{{ concurso.titulo }}</h3>
+                            <div class="contest-tags">
+                                <span class="tag tag-primary">{{ concurso.estado|capitalize }}</span>
+                                {% if concurso.categorias %}
+                                    {% for categoria in concurso.categorias[:2] %}
+                                    <span class="tag">{{ categoria.nombre }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="contest-card-body">
+                            <p>{{ concurso.descripcion or 'Sin descripción disponible' }}</p>
+                            <div class="contest-meta">
+                                📅 {{ concurso.fecha_inicio.strftime('%b %d') if concurso.fecha_inicio else '' }} - {{ concurso.fecha_fin.strftime('%b %d, %Y') if concurso.fecha_fin else '' }}
+                            </div>
+                        </div>
+                        <div class="contest-card-footer">
+                            <span class="btn btn-primary" style="width:100%">Ver detalles</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">🏆</div>
+                    <h3>No hay concursos disponibles</h3>
+                    <p>En este momento no hay concursos {{ 'activos' if mostrar_activos else 'disponibles' }}. Vuelve pronto para descubrir nuevos desafíos artísticos.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+/* Page Header Styles */
+.section-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--on-surface);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.filter-tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--radius);
+    border: 1px solid var(--outline-variant);
+    background-color: var(--surface-container-lowest);
+    color: var(--on-surface-variant);
+    transition: all 0.2s ease;
+}
+
+.filter-tab:hover {
+    background-color: var(--surface-container-low);
+    color: var(--on-surface);
+}
+
+.filter-tab.active {
+    background-color: var(--primary-container);
+    border-color: var(--primary-container);
+    color: var(--on-primary);
+}
+
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background-color: var(--surface-container-low);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--outline-variant);
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--on-surface);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .section-header h1 {
+        font-size: 28px;
+    }
+
+    .filter-tabs {
+        flex-wrap: wrap;
+    }
+
+    .filter-tab {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+}
+</style>
+
+{% endblock %}
