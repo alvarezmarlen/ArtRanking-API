@@ -1,6 +1,6 @@
 import os
 import uuid
-from flask import Blueprint, jsonify, request, current_app
+from flask import Blueprint, jsonify, request, current_app, render_template
 from werkzeug.utils import secure_filename
 from app.services.envio_servicio import (
     crear_envio,
@@ -16,6 +16,51 @@ from app.utils.decoradores import jwt_requerido
 from mongoengine.errors import DoesNotExist
 
 envio_bp = Blueprint("envio", __name__)
+
+
+@envio_bp.route("/ranking", methods=["GET"])  # GET /envios/ranking (HTML Page - Public)
+def ranking_pagina():
+    """Render página de ranking global (HTML). Público, no requiere JWT."""
+    from app.models.envio import Envio
+    from app.models.concurso import Concurso
+
+    # Obtener parámetros de filtro
+    concurso_id = request.args.get("concurso")
+    limite = request.args.get("limite", 50, type=int)
+
+    # Query base - solo envíos de concursos activos
+    query = {}
+    if concurso_id:
+        query["concurso"] = concurso_id
+
+    # Obtener envíos ordenados por votos
+    envios = Envio.objects(**query).order_by("-votos")[:limite]
+
+    # Enriquecer datos para el template
+    ranking = []
+    for i, envio in enumerate(envios, 1):
+        try:
+            ranking.append({
+                "posicion": i,
+                "id": str(envio.id),
+                "titulo": envio.titulo,
+                "descripcion": envio.descripcion,
+                "imagen_url": envio.imagen_url,
+                "votos": envio.votos,
+                "autor": envio.autor,
+                "concurso": envio.concurso
+            })
+        except:
+            continue
+
+    # Obtener lista de concursos activos para el filtro
+    concursos = Concurso.objects(activo=True, estado="activo")
+
+    return render_template("user/ranking.html",
+                         ranking=ranking,
+                         concursos=concursos,
+                         concurso_filtro=concurso_id)
+
 
 def allowed_file(filename):
     return '.' in filename and \

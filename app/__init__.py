@@ -34,7 +34,7 @@ def create_app(config_class=DevelopmentConfig):
    @app.before_request
    def middleware():
       # Lista de rutas que NO requieren autenticación
-      public_endpoints = ['auth.login', 'auth.login_page', 'auth.registro_page', 'auth.register', 'home', 'static', 'concurso.listar_pagina', 'concurso.detalle_pagina']
+      public_endpoints = ['auth.login', 'auth.login_page', 'auth.registro_page', 'auth.register', 'home', 'static', 'concurso.listar_pagina', 'concurso.detalle_pagina', 'envio.ranking_pagina', 'envio.listar', 'envio.detalle']
       token = request.cookies.get("access_token")
       g.user = None
 
