@@ -134,7 +134,14 @@
                     <div class="gallery-item-info">
                         <h4>{{ obra.titulo }}</h4>
                         <p>por @{{ obra.autor.email.split('@')[0] if obra.autor else 'anonimo' }}</p>
-                        <div class="gallery-item-votes">⭐ {{ obra.votos }} votos</div>
+                        <div class="gallery-item-footer">
+                            <div class="gallery-item-votes" id="votes-{{ obra.id }}">⭐ {{ obra.votos }} votos</div>
+                            {% if g.user and g.user.id|string in obra.votantes|map(attribute='id')|map('string') %}
+                                <button class="btn btn-secondary btn-sm" disabled>Votado</button>
+                            {% else %}
+                                <button class="btn btn-primary btn-sm btn-vote" data-id="{{ obra.id }}">Votar</button>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 {% endfor %}

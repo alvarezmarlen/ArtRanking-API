@@ -546,7 +546,10 @@ main {
 
 .gallery-item-overlay {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
     background: linear-gradient(180deg, transparent 40%, rgba(25, 27, 36, 0.75) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -554,6 +557,7 @@ main {
     flex-direction: column;
     justify-content: flex-end;
     padding: 1rem;
+    pointer-events: none; /* Permite clics a través del overlay por seguridad */
 }
 
 .gallery-item:hover .gallery-item-overlay {
@@ -590,6 +594,27 @@ main {
     padding: 0.25rem 0.5rem;
     border-radius: 9999px;
     margin-top: 0.5rem;
+}
+
+.gallery-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--surface-container-high);
+}
+
+.gallery-item-votes {
+    margin-top: 0; /* Override previous margin */
+    background-color: var(--surface-container-high);
+    color: var(--primary);
+    border: 1px solid var(--outline-variant);
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 12px;
 }
 
 /* ========================================
