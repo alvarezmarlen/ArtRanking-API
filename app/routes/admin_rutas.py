@@ -39,15 +39,21 @@ def guardar_concurso():
     from mongoengine.connection import get_db
     db = get_db()
     
+    # Tomamos el ID que el middleware acaba de asegurar en la sesión
+    admin_id = session.get("user_id")
+    # Segundo el ID del concurso del formulario para saber si editamos o creamos
     id_concurso = request.form.get("id")
+    
+    if not admin_id:
+        return jsonify({"status": "error", "message": "No se detecta sesión de administrador"}), 401
     
     datos = {
         "titulo": request.form.get("titulo"),
         "descripcion": request.form.get("descripcion"),
-        "estado": request.form.get("estado"),
-        # AGREGAMOS ESTO: Para que MongoDB no rechace el guardado por falta de campos
+        "estado": request.form.get("estado", "activo"),
+        "creado_por": ObjectId(admin_id), # Enlace real con el admin logueado
         "fecha_inicio": datetime.utcnow(),
-        "creado_por": ObjectId(session.get("user_id") or "69ea009812fd61d1004f74f8"),
+        "fecha_fin": datetime(2025, 12, 31),
         "categorias": []
     }
 
