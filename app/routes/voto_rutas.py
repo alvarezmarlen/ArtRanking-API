@@ -7,7 +7,7 @@ voto_bp = Blueprint("votos", __name__)
 
 # votos
 @voto_bp.route("/", methods=["POST"])
-@jwt_requerido
+# @jwt_requerido
 def crear_voto():
     """Crear nuevo voto a concurso (requiere JWT)."""
     from app.schemas.voto_esquema import VotoSchema

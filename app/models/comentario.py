@@ -1,8 +1,8 @@
-from mongoengine import Document, StringField, DateTimeField
+from mongoengine import Document, StringField, DateTimeField, ReferenceField
 import datetime
 
 class Comentario(Document):
-    user_id = StringField(required=True)
-    submission_id = StringField(required=True)
+    usuario = ReferenceField('Usuario', required=True)
+    envio = ReferenceField('Envio', required=True)
     texto = StringField(required=True)
     fecha = DateTimeField(default=datetime.datetime.utcnow)

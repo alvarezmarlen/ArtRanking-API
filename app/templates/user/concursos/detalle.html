@@ -1,0 +1,287 @@
+{% extends "layouts/base_user.html" %}
+
+{% block title %}{{ concurso.titulo }} - ArtRanking{% endblock %}
+
+{% block content %}
+
+<!-- Contest Detail Header -->
+<section class="section">
+    <div class="container">
+        <a href="/concursos" class="btn btn-ghost" style="margin-bottom: 1rem;">← Volver a concursos</a>
+        
+        <div class="contest-detail-header">
+            <h1>{{ concurso.titulo }}</h1>
+            <div class="contest-detail-meta">
+                <span class="badge badge-{{ 'success' if concurso.estado == 'activo' else 'warning' }}">
+                    {{ concurso.estado|upper }}
+                </span>
+                <span class="contest-detail-date">
+                    📅 {{ concurso.fecha_inicio.strftime('%b %d, %Y') if concurso.fecha_inicio else '' }} - {{ concurso.fecha_fin.strftime('%b %d, %Y') if concurso.fecha_fin else '' }}
+                </span>
+            </div>
+        </div>
+
+        <div class="contest-detail-content">
+            <div class="contest-detail-description">
+                <h2>Descripción</h2>
+                <p>{{ concurso.descripcion }}</p>
+            </div>
+
+            <div class="contest-detail-actions">
+                {% if g.user %}
+                    {% if ha_participado %}
+                    <div class="participation-status">
+                        <div class="status-badge success">
+                            <span>✅</span>
+                            <div>
+                                <strong>¡Ya estás participando!</strong>
+                                <p>Has subido tu obra correctamente. ¡Mucha suerte!</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <button class="btn btn-primary btn-lg" onclick="openModal('participate-modal')">Participar en este concurso</button>
+                    {% endif %}
+                {% else %}
+                <div class="login-to-participate">
+                    <p>¿Quieres participar?</p>
+                    <a href="{{ url_for('auth.login_page') }}?next={{ request.path }}" class="btn btn-primary">Inicia sesión para participar</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Participation Modal -->
+<div id="participate-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Participar en el concurso</h3>
+            <button class="btn-close" onclick="closeModal('participate-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="participate-form" enctype="multipart/form-data">
+                <input type="hidden" name="concurso_id" value="{{ concurso.id }}">
+                
+                <div class="form-group">
+                    <label for="titulo">Título de la obra</label>
+                    <input type="text" id="titulo" name="titulo" required placeholder="Ej: Atardecer en el bosque">
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" placeholder="Cuenta un poco sobre tu obra..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoria_id">Categoría</label>
+                    <select id="categoria_id" name="categoria_id" required>
+                        <option value="">Selecciona una categoría</option>
+                        {% for cat in concurso.categorias %}
+                        <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="archivo">Tu obra (Imagen o PDF)</label>
+                    <input type="file" id="archivo" name="archivo" required accept="image/*,application/pdf">
+                    <small style="color: var(--on-surface-variant); display: block; margin-top: 4px;">
+                        Formatos permitidos: JPG, PNG, GIF, PDF. Máximo 16MB.
+                    </small>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('participate-modal')">Cancelar</button>
+            <button type="submit" form="participate-form" class="btn btn-primary">Enviar Obra</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const participateForm = document.getElementById('participate-form');
+    if (participateForm) {
+        participateForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('archivo');
+            if (fileInput.files.length > 0) {
+                const fileSize = fileInput.files[0].size / 1024 / 1024; // MB
+                if (fileSize > 16) {
+                    showAlert('El archivo es demasiado grande (máximo 16MB)', 'error');
+                    return;
+                }
+            }
+
+            const formData = new FormData(this);
+            const submitBtn = this.closest('.modal-content').querySelector('button[type="submit"]');
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Enviando...';
+                
+                const response = await fetch('/envios/participar', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                let result;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    result = await response.json();
+                } else {
+                    const text = await response.text();
+                    console.error('Respuesta no JSON del servidor:', text);
+                    throw new Error(`Error del servidor (${response.status})`);
+                }
+                
+                if (response.ok) {
+                    showAlert(result.mensaje, 'success');
+                    closeModal('participate-modal');
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    showAlert(result.error || 'Ocurrió un error al enviar tu obra', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert(error.message || 'Error de conexión con el servidor', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Obra';
+            }
+        });
+    }
+});
+</script>
+
+<style>
+.contest-detail-header {
+    margin-bottom: 2rem;
+}
+
+.contest-detail-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--on-surface);
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+}
+
+.contest-detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-success {
+    background-color: var(--tertiary);
+    color: var(--on-tertiary);
+}
+
+.badge-warning {
+    background-color: var(--secondary-container);
+    color: var(--on-secondary-container);
+}
+
+.contest-detail-date {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+}
+
+.contest-detail-content {
+    display: grid;
+    gap: 2rem;
+}
+
+.contest-detail-description h2,
+.contest-detail-categories h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--on-surface);
+    margin-bottom: 1rem;
+}
+
+.contest-detail-description p {
+    font-size: 16px;
+    color: var(--on-surface-variant);
+    line-height: 1.6;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.contest-detail-actions {
+    padding-top: 1rem;
+    border-top: 1px solid var(--outline-variant);
+}
+
+.login-to-participate {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--surface-container-low);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--outline-variant);
+}
+
+.login-to-participate p {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.participation-status {
+    padding: 1.5rem;
+    background-color: var(--surface-container-low);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--outline-variant);
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.status-badge span {
+    font-size: 24px;
+}
+
+.status-badge strong {
+    display: block;
+    font-size: 16px;
+    color: var(--on-surface);
+}
+
+.status-badge p {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .contest-detail-header h1 {
+        font-size: 24px;
+    }
+}
+</style>
+
+{% endblock %}

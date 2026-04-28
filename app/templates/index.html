@@ -1,0 +1,160 @@
+{% extends "layouts/base_user.html" %}
+
+{% block title %}Inicio - ArtRanking{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <span class="hero-badge">🏆 Plataforma de Concursos de Arte</span>
+            <h1>Donde el talento artístico encuentra el <span>reconocimiento</span></h1>
+            <p>Participa en concursos, sube tus obras y vota por tus favoritos. El ranking decide a los ganadores. La comunidad artística te espera.</p>
+            <div class="hero-actions">
+                <a href="/concursos" class="btn btn-primary btn-lg">Explorar Concursos</a>
+                <a href="/auth/registro" class="btn btn-secondary btn-lg">Unirse como Artista</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-image-grid">
+                <img src="https://placehold.co/120x120/0047c8/ffffff?text=Arte+1" alt="Obra 1">
+                <img src="https://placehold.co/120x120/025cfd/ffffff?text=Arte+2" alt="Obra 2">
+                <img src="https://placehold.co/120x120/505f76/ffffff?text=Arte+3" alt="Obra 3">
+                <img src="https://placehold.co/120x120/992d00/ffffff?text=Arte+4" alt="Obra 4">
+                <img src="https://placehold.co/120x120/424656/ffffff?text=Arte+5" alt="Obra 5">
+                <img src="https://placehold.co/120x120/191b24/ffffff?text=Arte+6" alt="Obra 6">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="stats-bar">
+    <div class="container">
+        <div class="stat-item">
+            <h3>{{ total_obras }}</h3>
+            <p>Obras Subidas</p>
+        </div>
+        <div class="stat-item">
+            <h3>{{ concursos_activos }}</h3>
+            <p>Concursos Activos</p>
+        </div>
+        <div class="stat-item">
+            <h3>{{ total_votos }}</h3>
+            <p>Votos Emitidos</p>
+        </div>
+        <div class="stat-item">
+            <h3>{{ total_artistas }}</h3>
+            <p>Artistas Registrados</p>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="section how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <h2>¿Cómo funciona?</h2>
+            <p>Tres pasos sencillos para participar en la comunidad artística de ArtRanking</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>🔍 Explora</h3>
+                <p>Descubre concursos activos filtrados por categoría. Encuentra el concurso perfecto para tu estilo artístico.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>📤 Sube tu obra</h3>
+                <p>Participa con tus mejores creaciones. Subir tu trabajo es rápido y sencillo, solo necesitas una URL de imagen.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>⭐ Vota y gana</h3>
+                <p>Apoya a otros artistas votando sus obras y escala en el ranking. ¡Los más votados ganan reconocimiento!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Active Contests Preview -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Concursos Activos</h2>
+            <p>Participa en estos concursos abiertos y muestra tu talento al mundo</p>
+        </div>
+        <div class="contests-grid">
+            {% if concursos %}
+                {% for concurso in concursos %}
+                <a href="/concursos/{{ concurso.id }}/detalle" class="contest-card-link">
+                    <div class="contest-card">
+                        <div class="contest-card-header">
+                            <h3>{{ concurso.titulo }}</h3>
+                        </div>
+                        <div class="contest-card-body">
+                            <p>{{ concurso.descripcion }}</p>
+                            <div class="contest-meta">
+                                📅 {{ concurso.fecha_inicio.strftime('%b %d') if concurso.fecha_inicio else '' }} - {{ concurso.fecha_fin.strftime('%b %d, %Y') if concurso.fecha_fin else '' }}
+                            </div>
+                        </div>
+                        <div class="contest-card-footer">
+                            <span class="btn btn-primary" style="width:100%">Ver detalles</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <p style="grid-column: 1/-1; text-align: center; color: var(--on-surface-variant);">No hay concursos activos</p>
+            {% endif %}
+        </div>
+        <div class="view-all">
+            <a href="/concursos">Ver todos los concursos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Submissions -->
+<section class="section how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <h2>Obras Destacadas</h2>
+            <p>Las creaciones más populares de nuestra comunidad esta semana</p>
+        </div>
+        <div class="gallery-grid">
+            {% if obras %}
+                {% for obra in obras %}
+                <div class="gallery-item">
+                    <img src="{{ obra.imagen_url }}" alt="{{ obra.titulo }}">
+                    <div class="gallery-item-overlay">
+                        <h4 style="color:white; margin:0; font-size:14px;">{{ obra.titulo }}</h4>
+                        <p style="color:rgba(255,255,255,0.8); margin:4px 0 0; font-size:12px;">por @{{ obra.autor.email.split('@')[0] if obra.autor else 'anonimo' }}</p>
+                    </div>
+                    <div class="gallery-item-info">
+                        <h4>{{ obra.titulo }}</h4>
+                        <p>por @{{ obra.autor.email.split('@')[0] if obra.autor else 'anonimo' }}</p>
+                        <div class="gallery-item-votes">⭐ {{ obra.votos }} votos</div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="grid-column: 1/-1; text-align: center; color: var(--on-surface-variant);">No hay obras destacadas</p>
+            {% endif %}
+        </div>
+        <div class="view-all">
+            <a href="/galeria">Explorar galería completa</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>¿Listo para mostrar tu arte al mundo?</h2>
+        <p>Únete a miles de artistas que ya están compitiendo, votando y creciendo juntos en ArtRanking.</p>
+        <a href="/auth/registro" class="btn">Crear cuenta gratis</a>
+    </div>
+</section>
+
+{% endblock %}

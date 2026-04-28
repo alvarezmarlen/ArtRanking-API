@@ -3,7 +3,8 @@ Rutas de Concursos (Blueprint).
 Endpoints REST para gestionar concursos artísticos.
 Prefijo URL: /concursos
 """
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template, g
+from app.models.envio import Envio
 from app.services.concurso_servicio import (
     crear_concurso,
     obtener_concursos,
@@ -59,9 +60,20 @@ def listar():
     return jsonify(resultado)
 
 
-@concurso_bp.route("/<concurso_id>", methods=["GET"])  # GET /concursos/<id>
+@concurso_bp.route("/<concurso_id>/detalle", methods=["GET"])  # GET /concursos/<id>/detalle (HTML Page)
+def detalle_pagina(concurso_id):
+    """Render página de detalle de concurso (HTML)."""
+    concurso = obtener_concurso(concurso_id)
+
+    if not concurso:
+        return render_template("common/errores/404.html"), 404
+
+    return render_template("user/concursos/detalle.html", concurso=concurso)
+
+
+@concurso_bp.route("/<concurso_id>", methods=["GET"])  # GET /concursos/<id> (API)
 def detalle(concurso_id):
-    """Obtener detalle de un concurso con sus categorías."""
+    """Obtener detalle de un concurso con sus categorías (API JSON)."""
     concurso = obtener_concurso(concurso_id)
 
     if not concurso:
