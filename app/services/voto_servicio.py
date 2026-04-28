@@ -7,18 +7,22 @@ def votar(data, user_id):
     envio = Envio.objects(id=data["submission_id"]).first()
     if not envio:
         return None, "Envío no encontrado"
+    
     # Evitar votar por su propia obra
     if str(envio.autor.id) == user_id:
         return None, "No puedes votar por tu propia obra"
 
     # evitar doble voto
-    existente = Voto.objects(user_id=user_id, submission_id=data["submission_id"]).first()
-    if existente:
+    # Comprobamos tanto en la colección Voto como en la lista de votantes del Envio
+    existente = Voto.objects(usuario=user_id, envio=data["submission_id"]).first()
+    if existente or user_id in [str(v.id) if hasattr(v, 'id') else str(v) for v in envio.votantes]:
         return None, "Ya has votado por esta obra"
 
-    voto = Voto(user_id=user_id, submission_id=data["submission_id"]).save()
+    # Crear el voto
+    voto = Voto(usuario=user_id, envio=data["submission_id"]).save()
 
     # Actualizar el contador de votos y la lista de votantes en el Envío
+    # Usamos update para asegurar atomicidad
     envio.update(inc__votos=1, push__votantes=user_id)
 
     # Notificación al autor de la obra

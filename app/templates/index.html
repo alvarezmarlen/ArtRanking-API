@@ -134,7 +134,10 @@
                     <div class="gallery-item-info">
                         <h4>{{ obra.titulo }}</h4>
                         <p>por @{{ obra.autor.email.split('@')[0] if obra.autor else 'anonimo' }}</p>
-                        <div class="gallery-item-votes">⭐ {{ obra.votos }} votos</div>
+                        <div class="gallery-item-footer">
+                            <div class="gallery-item-votes" id="votes-{{ obra.id }}">⭐ {{ obra.votos }} votos</div>
+                            <button class="btn btn-primary btn-sm btn-vote" data-id="{{ obra.id }}">Votar</button>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}

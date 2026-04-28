@@ -592,6 +592,27 @@ main {
     margin-top: 0.5rem;
 }
 
+.gallery-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--surface-container-high);
+}
+
+.gallery-item-votes {
+    margin-top: 0; /* Override previous margin */
+    background-color: var(--surface-container-high);
+    color: var(--primary);
+    border: 1px solid var(--outline-variant);
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 12px;
+}
+
 /* ========================================
    CTA Section
    ======================================== */

@@ -7,12 +7,16 @@ voto_bp = Blueprint("votos", __name__)
 
 # votos
 @voto_bp.route("/", methods=["POST"])
-# @jwt_requerido
+@jwt_requerido
 def crear_voto():
     """Crear nuevo voto a concurso (requiere JWT)."""
     from app.schemas.voto_esquema import VotoSchema
     schema = VotoSchema()
-    data = schema.load(request.json)
+    
+    try:
+        data = schema.load(request.json)
+    except Exception as e:
+        return jsonify({"error": "Datos inválidos"}), 400
 
     voto, error = votar(data, request.user["user_id"])
 
@@ -23,16 +27,21 @@ def crear_voto():
 
 # comentarios
 @voto_bp.route("/comentarios", methods=["POST"])
+@jwt_requerido
 def comentar():
     from app.models.comentario import Comentario
 
     data = request.json
+    user_id = request.user["user_id"]
 
-    comentario = Comentario(
-        user_id=data["user_id"],
-        submission_id=data["submission_id"],
-        texto=data["texto"]
-    ).save()
+    try:
+        comentario = Comentario(
+            usuario=user_id,
+            envio=data["submission_id"],
+            texto=data["texto"]
+        ).save()
+    except Exception as e:
+        return jsonify({"error": "Error al guardar comentario"}), 400
 
     return jsonify({"message": "Comentario añadido"})
 
