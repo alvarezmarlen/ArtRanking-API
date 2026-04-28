@@ -92,7 +92,7 @@ def create_app(config_class=DevelopmentConfig):
     total_artistas = Usuario.objects().count()
 
     # Fetch active contests safely
-    concursos_query = Concurso.objects(activo=True, estado="activo").limit(3)
+    concursos_query = Concurso.objects(activo=True, estado="activo").limit(10)
     concursos = []
     for c in concursos_query:
         try:
@@ -104,7 +104,7 @@ def create_app(config_class=DevelopmentConfig):
             continue
 
     # Fetch featured submissions safely
-    obras_query = Envio.objects().order_by('-votos').limit(3)
+    obras_query = Envio.objects().order_by('-votos').limit(10)
     obras = []
     for o in obras_query:
         try:
