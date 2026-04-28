@@ -5,6 +5,7 @@ Prefijo URL: /concursos
 """
 from flask import Blueprint, jsonify, request, render_template, g
 from app.models.envio import Envio
+from app.models.concurso import Concurso
 from app.services.concurso_servicio import (
     crear_concurso,
     obtener_concursos,
@@ -38,10 +39,27 @@ def crear():
     }), 201
 
 
-@concurso_bp.route("", methods=["GET"])  # GET /concursos
+@concurso_bp.route("", methods=["GET"])  # GET /concursos (HTML Page - Public)
+def listar_pagina():
+    """Render página de lista de concursos (HTML). Público, no requiere JWT."""
+    # Obtener parámetro de filtro (activos o todos)
+    mostrar_activos = request.args.get("activos", "true").lower() == "true"
+
+    # Obtener concursos según filtro
+    if mostrar_activos:
+        concursos = Concurso.objects(activo=True, estado="activo")
+    else:
+        concursos = Concurso.objects(activo=True)
+
+    return render_template("user/concursos/lista.html",
+                         concursos=concursos,
+                         mostrar_activos=mostrar_activos)
+
+
+@concurso_bp.route("/api", methods=["GET"])  # GET /concursos/api (API JSON)
 @jwt_requerido
-def listar():
-    """Listar concursos. Query param: activos=true/false."""
+def listar_api():
+    """Listar concursos (API JSON). Query param: activos=true/false. Requiere JWT."""
     activos = request.args.get("activos", "true").lower() == "true"
     concursos = obtener_concursos(activos)
 
