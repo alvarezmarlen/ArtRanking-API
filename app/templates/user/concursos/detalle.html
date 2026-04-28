@@ -28,7 +28,26 @@
             </div>
 
             <div class="contest-detail-actions">
-                <button class="btn btn-primary btn-lg" onclick="openModal('participate-modal')">Participar en este concurso</button>
+                {% if g.user %}
+                    {% if ha_participado %}
+                    <div class="participation-status">
+                        <div class="status-badge success">
+                            <span>✅</span>
+                            <div>
+                                <strong>¡Ya estás participando!</strong>
+                                <p>Has subido tu obra correctamente. ¡Mucha suerte!</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <button class="btn btn-primary btn-lg" onclick="openModal('participate-modal')">Participar en este concurso</button>
+                    {% endif %}
+                {% else %}
+                <div class="login-to-participate">
+                    <p>¿Quieres participar?</p>
+                    <a href="{{ url_for('auth.login_page') }}?next={{ request.path }}" class="btn btn-primary">Inicia sesión para participar</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -88,6 +107,15 @@ document.addEventListener('DOMContentLoaded', function() {
         participateForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            const fileInput = document.getElementById('archivo');
+            if (fileInput.files.length > 0) {
+                const fileSize = fileInput.files[0].size / 1024 / 1024; // MB
+                if (fileSize > 16) {
+                    showAlert('El archivo es demasiado grande (máximo 16MB)', 'error');
+                    return;
+                }
+            }
+
             const formData = new FormData(this);
             const submitBtn = this.closest('.modal-content').querySelector('button[type="submit"]');
             
@@ -97,22 +125,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 const response = await fetch('/envios/participar', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
                 
-                const result = await response.json();
+                let result;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    result = await response.json();
+                } else {
+                    const text = await response.text();
+                    console.error('Respuesta no JSON del servidor:', text);
+                    throw new Error(`Error del servidor (${response.status})`);
+                }
                 
                 if (response.ok) {
                     showAlert(result.mensaje, 'success');
                     closeModal('participate-modal');
-                    // Opcional: Redirigir a galería o recargar
                     setTimeout(() => window.location.reload(), 2000);
                 } else {
                     showAlert(result.error || 'Ocurrió un error al enviar tu obra', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('Error de conexión con el servidor', 'error');
+                showAlert(error.message || 'Error de conexión con el servidor', 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Enviar Obra';
@@ -195,6 +233,48 @@ document.addEventListener('DOMContentLoaded', function() {
 .contest-detail-actions {
     padding-top: 1rem;
     border-top: 1px solid var(--outline-variant);
+}
+
+.login-to-participate {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--surface-container-low);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--outline-variant);
+}
+
+.login-to-participate p {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.participation-status {
+    padding: 1.5rem;
+    background-color: var(--surface-container-low);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--outline-variant);
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.status-badge span {
+    font-size: 24px;
+}
+
+.status-badge strong {
+    display: block;
+    font-size: 16px;
+    color: var(--on-surface);
+}
+
+.status-badge p {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    margin: 0;
 }
 
 @media (max-width: 768px) {

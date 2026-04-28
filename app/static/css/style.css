@@ -430,6 +430,12 @@ main {
     gap: 1.5rem;
 }
 
+.contest-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 .contest-card {
     background-color: var(--surface-container-lowest);
     border: 1px solid var(--outline-variant);

@@ -3,7 +3,8 @@ Rutas de Concursos (Blueprint).
 Endpoints REST para gestionar concursos artísticos.
 Prefijo URL: /concursos
 """
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, render_template, g
+from app.models.envio import Envio
 from app.services.concurso_servicio import (
     crear_concurso,
     obtener_concursos,

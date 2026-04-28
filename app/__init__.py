@@ -34,7 +34,7 @@ def create_app(config_class=DevelopmentConfig):
    @app.before_request
    def middleware():
       # Lista de rutas que NO requieren autenticación
-      public_endpoints = ['auth.login', 'auth.login_page', 'auth.registro_page', 'auth.register', 'home', 'static']
+      public_endpoints = ['auth.login', 'auth.login_page', 'auth.registro_page', 'auth.register', 'home', 'static', 'concurso.detalle_pagina']
       token = request.cookies.get("access_token")
       g.user = None
 
@@ -44,9 +44,13 @@ def create_app(config_class=DevelopmentConfig):
             # Opcional: Cargar usuario en g.user para usarlo en templates
             g.user = Usuario.objects(id=payload["user_id"]).first()
 
-      # Si no hay usuario y la ruta no es pública, redirigir al home
+      # Si no hay usuario y la ruta no es pública
       if not g.user and request.endpoint not in public_endpoints:
+         # Si es una petición de API o AJAX, devolvemos JSON 401 en lugar de redireccionar a HTML
+         if request.path.startswith('/envios/') or request.path.startswith('/votos/') or request.headers.get('Accept') == 'application/json':
+             return jsonify({"error": "Tu sesión ha expirado o no has iniciado sesión. Por favor, inicia sesión de nuevo."}), 401
          return redirect(url_for("home"))
+      
       # 2. Protección Admin: Si intenta entrar a una ruta de admin y NO es admin -> Error 403
       if request.blueprint == 'admin' and (not g.user or g.user.role != 'admin'):
          return redirect(url_for("error_403"))
@@ -66,9 +70,10 @@ def create_app(config_class=DevelopmentConfig):
       return render_template("common/errores/404.html"), 404
 
    @app.errorhandler(500)
-   @app.errorhandler(Exception)
    def internal_server_error(e):
-      # Log the error here if needed
+      # Si es una petición de API o AJAX, devolvemos JSON en lugar de HTML
+      if request.path.startswith('/envios/') or request.path.startswith('/votos/') or request.headers.get('Accept') == 'application/json':
+         return jsonify({"error": "Error interno del servidor", "details": str(e)}), 500
       return render_template("common/errores/500.html"), 500
 
    # Handler específico para errores de base de datos (documentos que no existen)

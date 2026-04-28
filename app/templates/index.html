@@ -88,20 +88,22 @@
         <div class="contests-grid">
             {% if concursos %}
                 {% for concurso in concursos %}
-                <div class="contest-card">
-                    <div class="contest-card-header">
-                        <h3>{{ concurso.titulo }}</h3>
-                    </div>
-                    <div class="contest-card-body">
-                        <p>{{ concurso.descripcion }}</p>
-                        <div class="contest-meta">
-                            📅 {{ concurso.fecha_inicio.strftime('%b %d') if concurso.fecha_inicio else '' }} - {{ concurso.fecha_fin.strftime('%b %d, %Y') if concurso.fecha_fin else '' }}
+                <a href="/concursos/{{ concurso.id }}/detalle" class="contest-card-link">
+                    <div class="contest-card">
+                        <div class="contest-card-header">
+                            <h3>{{ concurso.titulo }}</h3>
+                        </div>
+                        <div class="contest-card-body">
+                            <p>{{ concurso.descripcion }}</p>
+                            <div class="contest-meta">
+                                📅 {{ concurso.fecha_inicio.strftime('%b %d') if concurso.fecha_inicio else '' }} - {{ concurso.fecha_fin.strftime('%b %d, %Y') if concurso.fecha_fin else '' }}
+                            </div>
+                        </div>
+                        <div class="contest-card-footer">
+                            <span class="btn btn-primary" style="width:100%">Ver detalles</span>
                         </div>
                     </div>
-                    <div class="contest-card-footer">
-                        <a href="/concursos/{{ concurso.id }}/detalle" class="btn btn-primary" style="width:100%">Ver detalles</a>
-                    </div>
-                </div>
+                </a>
                 {% endfor %}
             {% else %}
                 <p style="grid-column: 1/-1; text-align: center; color: var(--on-surface-variant);">No hay concursos activos</p>

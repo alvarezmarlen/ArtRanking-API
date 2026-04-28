@@ -22,6 +22,11 @@ def crear_envio(data, usuario_id):
     if not concurso or not concurso.activo:
         return None, "Concurso no encontrado o inactivo"
 
+    # Validar si el usuario ya participó en este concurso
+    ya_participo = Envio.objects(autor=usuario_id, concurso=concurso.id).first()
+    if ya_participo:
+        return None, "Ya has participado en este concurso"
+
     categoria = Categoria.objects(id=data["categoria_id"]).first()
 
     if not categoria:
