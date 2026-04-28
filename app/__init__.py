@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, redirect, url_for, g, flash
+from flask import Flask, request, redirect, url_for, g, flash, jsonify
 from config import DevelopmentConfig
 from app.extensiones.db import init_db
 from mongoengine.connection import get_db
