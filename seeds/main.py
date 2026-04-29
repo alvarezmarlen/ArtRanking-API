@@ -123,14 +123,19 @@ def run_seeds():
     # 7. Votos
     print("Creando votos...")
     for i in range(15):
+        usuario_vota = usuarios[i % 6]
+        envio_target = envios[i % 10]
+
         v = Voto(
-            usuario=usuarios[i % 6],
-            envio=envios[i % 10],
+            usuario=usuario_vota,
+            envio=envio_target,
             value=1
         ).save()
-        # Actualizar contador de votos en el envío
-        envio_target = envios[i % 10]
+
+        # Actualizar contador de votos y lista de votantes en el envío
         envio_target.votos += 1
+        if usuario_vota not in envio_target.votantes:
+            envio_target.votantes.append(usuario_vota)
         envio_target.save()
 
     # 8. Comentarios
