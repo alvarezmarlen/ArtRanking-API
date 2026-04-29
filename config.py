@@ -19,3 +19,9 @@ class DevelopmentConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
    DEBUG = False
    MONGO_URI = os.getenv("MONGO_URI")
+
+class TestConfig(BaseConfig):
+   TESTING = True
+   MONGO_URI = "mongodb://localhost:27017/test_artranking"
+   MONGO_CLIENT_CLASS = None  # Will be set in test fixture
+   WTF_CSRF_ENABLED = False
