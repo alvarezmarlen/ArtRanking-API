@@ -65,3 +65,4 @@ Esta estructura permite que el sistema sea:
 - **Testeable:** Los servicios se pueden probar independientemente de la web.
 - **Seguro:** Centralizamos la validación y autenticación.
 - **Mantenible:** Cambiar la lógica de negocio no afecta a las rutas y viceversa.
+-
