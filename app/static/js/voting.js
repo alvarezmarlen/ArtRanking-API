@@ -16,11 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isGuest = !document.querySelector('a[href="/auth/logout"]');
             
             if (isGuest) {
-                if (typeof showToast === 'function') {
-                    showToast('Debes iniciar sesión para votar', 'error');
-                } else {
-                    alert('Debes iniciar sesión para votar');
-                }
+                showAlert('Debes iniciar sesión para votar', 'error');
                 setTimeout(() => {
                     window.location.href = '/auth/login';
                 }, 1500);
@@ -51,29 +47,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         voteCounter.textContent = `⭐ ${currentVotes + 1} votos`;
                     }
                     
-                    if (typeof showToast === 'function') {
-                        showToast('¡Voto registrado con éxito!', 'success');
-                    } else {
-                        alert('¡Voto registrado con éxito!');
-                    }
+                    showAlert('¡Voto registrado con éxito!', 'success');
                     
                     button.textContent = 'Votado';
+                    button.disabled = true;
                     button.classList.remove('btn-primary');
                     button.classList.add('btn-secondary');
                 } else {
-                    if (typeof showToast === 'function') {
-                        showToast(result.error || 'Error al votar', 'error');
-                    } else {
-                        alert(result.error || 'Error al votar');
-                    }
+                    showAlert(result.error || 'Error al votar', 'error');
                     button.disabled = false;
                     button.textContent = 'Votar';
                 }
             } catch (error) {
                 console.error('Error in voting:', error);
-                if (typeof showToast === 'function') {
-                    showToast('Error de conexión', 'error');
-                }
+                showAlert('Error de conexión', 'error');
                 button.disabled = false;
                 button.textContent = 'Votar';
             }
