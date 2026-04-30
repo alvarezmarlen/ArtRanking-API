@@ -181,6 +181,21 @@ Relaciones:
 
 ---
 
+## Entidades por orden de importancia
+
+1. `Usuario` (1:1 Perfil, 1:N Concurso, 1:N Envio, 1:N Comentario, 1:N Voto, N:M Envio como votante)
+2. `Envio` (1:N Comentario, 1:N Voto, N:M Etiqueta, 1:1 Usuario autor, 1:1 Concurso, 1:1 Categoria, N:M Usuario en votantes)
+3. `Concurso` (1:N Envio, N:M Categoria, 1:1 Usuario creador)
+4. `Categoria` (1:N Envio, N:M Concurso)
+5. `Voto` (1:1 Usuario, 1:1 Envio)
+6. `Comentario` (1:1 Usuario, 1:1 Envio)
+7. `Etiqueta` (N:M Envio a través de EnvioEtiqueta)
+8. `EnvioEtiqueta` (1:1 Envio, 1:1 Etiqueta)
+9. `Perfil` (1:1 Usuario)
+10. `Notificacion` (relación implícita con Usuario vía `user_id` en texto)
+
+---
+
 ## Observaciones
 
 - `EnvioEtiqueta` funciona como tabla intermedia para etiquetas.
