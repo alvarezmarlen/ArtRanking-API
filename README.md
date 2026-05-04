@@ -108,6 +108,6 @@ Desarrollado como parte del Curso Fullstack Python.
 ## 👥 Colaboradores
 
 - [Marlen Álvarez](https://github.com/alvarezmarlen)
-- [fediralydev](https://github.com/fediralydev)
+- [fediralydev](https://www.linkedin.com/in/achrafrzz/)
 - [Juan Carlos](https://github.com/JuanCarlos0977)
 - [Kevin Ruiz](https://github.com/Kevingedev)
